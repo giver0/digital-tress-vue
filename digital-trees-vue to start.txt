@@ -1,4 +1,4 @@
-cd Documents\GitLab\digital-trees\digital-trees-vue
+cd Documents\GitHub\digital-trees-vue
 npm run serve
 cd digital-trees-vue
 npm install
