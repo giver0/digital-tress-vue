@@ -8,11 +8,10 @@ import fieldBox from './components/field-box'
 export default {
   name: 'App',
   components: {
-    fieldBox
+    fieldBox,
   },
   methods: {
-    
-  }
+  },
 }
 </script>
 
@@ -23,6 +22,15 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+}
+
+body{
+  margin: 0px;
+  padding: 0px;
+}
+
+@font-face {
+  font-family: subwayTicker;
+  src: url(@/fonts/SUBWT___.ttf);
 }
 </style>

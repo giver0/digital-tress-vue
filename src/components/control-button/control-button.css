@@ -1,0 +1,37 @@
+/* .digital-tree__field-left {
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 328px;
+  align-items: center;
+  justify-content: flex-start;
+  margin-left: 24px;
+} */
+
+.digital-tree__control-button {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 240px;
+  margin-bottom: 8px;
+}
+
+.digital-tree__field-left-control-button {
+  background: none;
+  cursor: pointer;
+}
+
+.digital-tree__field-left-control-button:hover {
+  filter: invert(0.5);
+  background: none;
+}
+
+.digital-tree__field-left-title {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 25px;
+  text-align: center;
+  color: #222528;
+  margin-bottom: 16px;
+}

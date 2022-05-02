@@ -1,0 +1,14 @@
+.blocks-field {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  margin: 16px;
+  margin-top: 0px;
+}
+
+.testArray {
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+}

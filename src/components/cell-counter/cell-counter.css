@@ -1,0 +1,30 @@
+
+.cell-counter{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 8px;
+  margin-bottom: 8px;
+
+}
+
+.block-counter {
+  width: 48px;
+  height: 48px;
+  background: gray;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 0px;
+  /* border-radius: 5px; */
+}
+
+.block-counter-head{
+  width: 16px;
+  height: 48px;
+  background: red;
+}
+
+.cellText{
+  filter: invert(1);
+}

@@ -1,0 +1,45 @@
+.block {
+  width: 50px;
+  height: 50px;
+  background: gray;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 2px;
+  /* border-radius: 5px; */
+}
+
+.cellText{
+  filter: invert(1);
+}
+
+.create_block_animation {
+  animation: create_block 200ms;
+}
+
+.change_size_animation {
+  animation: change_size 200ms alternate;
+}
+
+
+@keyframes create_block { 
+  0% {} 
+  50% { background: none; } 
+  100% { background: gray; }  
+}
+
+@keyframes change_size { 
+  0% {
+    width: 50px;
+    height: 50px; 
+  } 
+  50% {
+    width: 54px;
+    height: 54px;
+    margin: 0px; 
+  } 
+  100% {
+    width: 50px;
+    height: 50px; 
+  } 
+}

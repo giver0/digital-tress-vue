@@ -1,125 +1,425 @@
 <template>
+  <div>
+    <CellHeader />
     <div class="digital-tree__layout">
-        <div class="digital-tree__field-left">
-            <div class="digital-tree__field-left-control">
-                <img src="https://img.icons8.com/external-bearicons-glyph-bearicons/64/000000/external-Pause-essential-collection-bearicons-glyph-bearicons.png" class="digital-tree__field-left-control-button" height="56px" id="field-left-control-pause"/>
-                <img src="https://img.icons8.com/glyph-neue/64/000000/restart.png" class="digital-tree__field-left-control-button" id="field-left-control-restart"/>
-                <img src="@/assets/paint-palette-svgrepo-com.svg" class="digital-tree__field-left-control-button" id="field-left-control-color" />
-            </div>
-            <div ref="myId3">{{ message }}</div>
-            <div class="digital-tree__field-left-title">
-                Logbox
-            </div>
-            <div class="digital-tree__field-left-logbox" id="left-logbox">
+      <div>
+        <CellsField
+          :fieldCells="fieldCells"
+        />
 
-            </div>
-        </div>
-        <div class="blocks-field" id="space-for-blocks" ref="blocksFields">      
-        </div>
+      </div>
+      <div class="digital-tree__control">
+        <ControlButton
+          @onPauseGame = "pauseGame"
+          :isGamePaused = "isGamePaused"
+          :isCanChangeColor = "isCanChangeColor"
+          @onChangeColor = "ChangeColor"
+        />
         <div class="digital-tree__counter">
-            <div class="digital-tree__counter-title">
-                All cycle from start
-            </div>
-            <div class="digital-tree__counter-count" id="counter-count">0</div>
-            <div class="digital-tree__counter-title">
-                Full cycle count
-            </div>
-            <div class="digital-tree__counter-count" id="counter-fullCircle-count">0</div>
-            <div class="digital-tree__counter-box">
-                <div class="digital-tree__counter-text-before">Delay </div>
-                <input type="number" id="counter-speed" oninput="changeSpeed()" placeholder="Speed" name="quantity" step="10" min="0" max="300" value="100">  
-                <div class="digital-tree__counter-text-after">ms</div>
-            </div>
-            <div class="digital-tree__counter-box">
-                <div class="digital-tree__counter-text-before" >Tree count</div>
-                <input type="number" id="counter-tree" placeholder="Tree count" name="quantity" step="1" min="0" max="10" value="3">  
-            </div>
-            <div class="digital-tree__counter-trees-cell-box" id="counter-trees-cell">
-            </div>
+          <CycleCounter
+            :cycleCounter="cycleCounter"
+            :fullCycleCounter="fullCycleCounter"
+          />
+          <div class="digital-tree__counter-box">
+            <div class="digital-tree__counter-text">Delay (ms) </div>
+            <input
+              type="number"
+              id="counter-speed"
+              v-model="timeRange"
+              placeholder="Speed"
+              name="quantity"
+              step="10"
+              min="0"
+              max="6000"
+              class="counter-text-input"
+            >
+          </div>
+          <div class="digital-tree__counter-box">
+            <div class="digital-tree__counter-text" >Tree count</div>
+            <input
+              type="number"
+              id="counter-tree"
+              v-model="treeCount"
+              placeholder="Tree count"
+              name="quantity"
+              step="1"
+              min="0"
+              max="10"
+              class="counter-text-input"
+              @input="checkTreeCount"
+            >
+          </div>
+          <div class="digital-tree__counter-box">
+            <div class="digital-tree__counter-text">Column</div>
+            <input
+              type="number"
+              id="counter-tree"
+              v-model="fieldWidth"
+              placeholder="Tree count"
+              name="quantity"
+              step="1"
+              min="1"
+              max="20"
+              @input="checkColumnCount"
+              class="counter-text-input"
+            >
+          </div>
+          <div class="digital-tree__counter-box">
+            <div class="digital-tree__counter-text">Raw</div>
+            <input
+              type="number"
+              id="counter-field-size-raw"
+              v-model="fieldHeight"
+              placeholder="Tree count"
+              name="quantity"
+              step="1"
+              min="1"
+              max="20"
+              @input="checkRawCount"
+              class="counter-text-input"
+            >
+          </div>
         </div>
+        <div class="digital-tree__counter-trees-cell-boxs" id="counter-trees-cell">
+          <CellCounter
+            v-for="tree in digitalTrees" :key="tree.id"
+            :tree="tree"
+          />
+        </div>
+        <LogBox
+          :logBoxArray = "logTextArray"
+        />
+      </div>
     </div>
+    <!-- <div>
+      <FieldCenter />
+    </div> -->
+    <!-- <div >
+      <div v-for="cellRaw in fieldCells" :key="cellRaw" class="testArray">
+        <div v-for="cell in fieldRaw" :key="cell.id" >
+          <CellBlock/>
+        </div>
+        <br>
+      </div>
+      Some text. Hello from WS
+    </div> -->
+  </div>
 </template>
 
 <script>
 
 import cellObject from '../classes/cellObject'
-
+import treeObject from '../classes/treeObject'
+import ControlButton from '../control-button'
+import CellHeader from '../cell-header'
+import CellCounter from '../cell-counter'
+import CellsField from '../cells-field'
+import CycleCounter from '../cycle-counter'
+import LogBox from '../log-box'
+import { ref, onMounted } from 'vue'
 
 const filedBox = {
   name: 'fieldBox',
-  components: {    
+  components: {
+    ControlButton,
+    CellHeader,
+    CellCounter,
+    CellsField,
+    CycleCounter,
+    LogBox,
   },
-    
-  data() {
-    return {
-      fieldCells:[],
-      fieldWidth: 11,
-      fieldHeight: 5,
-      spaceBetweenBlocks: 5,
-      blockSize: 50,
-      message:"Welcome",
-      blockClass: "block",
-      blocksFields: null      
+  setup() {
+    const logTextArray = ref([])
+    const fieldWidth = ref(16)
+    const fieldWidthPrevious = ref(16)
+    const fieldHeight = ref(8)
+    const fieldHeightPrevious = ref(8)
+    const digitalTrees = ref([])
+    const fieldCells = ref(new Array(8).fill(0)
+      .map(() => new Array(16)))
+    const blockClass = ref('block')
+    const basicColor = ref('#808080')
 
+    const timeRange = ref(200)
+
+    const cycleCounter = ref(0)
+    const fullCycleCounter = ref(0)
+
+    const treeCount = ref(3)
+    const treeCountPrevious = ref(3)
+
+    const isGameStop = ref(false)
+    const isGamePaused = ref(false)
+    const isGamePausedAtMoment = ref(false)
+    const isCanChangeColor = ref(true)
+
+    console.log('Hi')
+    createFieldObject()
+    for (let treeCounter = 0; treeCounter < treeCount.value; treeCounter++) {
+      new treeObject(digitalTrees.value)
     }
-    },
-    methods: {
-      makeFieldCells2d () {
-        for (let i = 0; i < this.fieldHeight; i++) {
-          this.fieldCells.push([])        
+
+    onMounted(() => {
+      console.log('Hi Mounted')
+      configBeforeStart()
+      console.log('config before start finished')
+      mainCycle()
+    })
+
+    function createFieldObject() {
+      for (let j = 0; j < fieldCells.value.length; j++) {
+        for (let i = 0; i < fieldCells.value[j].length; i++) {
+          fieldCells.value[j][i] = new cellObject(
+            i,
+            j,
+            blockClass.value,
+            basicColor.value,
+          )
         }
-      },
-      changeFieldSize() {
-        let newHeight = this.fieldHeight*this.blockSize+this.fieldHeight*this.spaceBetweenBlocks
-        let newWidth = this.fieldWidth*this.blockSize+this.fieldWidth*this.spaceBetweenBlocks
-        this.$el.querySelector(`#space-for-blocks`).style.width = `${newWidth}px`
-        this.$el.querySelector(`#space-for-blocks`).style.height = `${newHeight}px`    
-      },
-      createField () {
-        let newDivRaw
-        for (let j = 0; j < this.fieldHeight; j++) {
-          newDivRaw = document.createElement("div");
-          newDivRaw.className = "blocks-field-raw"
-          newDivRaw.id = `blocks-field-raw${j}`
-          for (let i = 0; i < this.fieldWidth; i++) {
-            document.body.onload = new cellObject(i, j, this.blocksFields, this.blockClass, newDivRaw);  
-          }
-        this.blocksFields.appendChild(newDivRaw)
+      }
+    }
 
+    function configBeforeStart() {
+      console.log('In config')
+      addFirstCellTrees()
+    }
+
+    function addFirstCellTrees() {
+      for (const tree of digitalTrees.value) {
+        tree.addFirstCell(
+          fieldCells.value,
+          basicColor.value,
+          logTextArray.value,
+        )
+      }
+    }
+
+    async function mainCycle() {
+      while (isGameStop.value === false) {
+        if (isGamePaused.value === false) {
+          await cycle()
         }
-      },
-      
-    },
-    created() {
-      console.log("Hi")
-      this.makeFieldCells2d()
-      console.log(this.fieldCells)
-      // changeFieldSize(this.fieldHeight, this.fieldWidth)    
+        if (isGamePaused.value === false) {
+          restart()
+        } else {
+          await sleep(200)
+        }
+      }
+    }
 
-    },
-    mounted() {
-      console.log("Hi Mounted")
-      this.$refs.myId3.innerText = 'Hello Bro' 
-      this.blocksFields = this.$el.querySelector(`#space-for-blocks`)
-      this.changeFieldSize()
-      
-      // let newDivRaw = document.createElement("div");
-      //   newDivRaw.className = this.blockClass
-      //   newDivRaw.id = `i0j0`
-      //   newDivRaw.ref = `i0j0`
-      //   // newDivRaw.id = `i${i}j${j}`
-      //   // this.elementById = document.getElementById(`i${i}j${j}`);
-      //   // fieldCells[j].push(this)
-      //   this.$refs.blocksFields.appendChild(newDivRaw)
-      //   this.$el.querySelector(`#i0j0`).style.background = "blue"
+    async function cycle() {
+      while (isAnyTreesCanMove()) {
+        await sleep(timeRange.value)
+        console.log('======= new turn =======')
+        createCellAtAllTree()
+        cycleCounter.value += 1
+        if (isGamePaused.value) {
+          isGamePausedAtMoment.value = true
+          return
+        }
+      }
+      fullCycleCounter.value += 1
+      logNewFullCycle()
+    }
 
-      this.createField ()
-      
-  }
+    function isAnyTreesCanMove() {
+      const isFreeCellsArray = digitalTrees.value
+        .map(Tree => Tree.isFreeCellsAround)
+      const isCanMove = isFreeCellsArray.includes(true)
+      return isCanMove
+    }
+
+    function sleep(ms) {
+      return new Promise((resolve) => {
+        setTimeout(resolve, ms)
+      })
+    }
+
+    async function createCellAtAllTree() {
+      for (const tree of digitalTrees.value) {
+        if (tree.isFreeCellsAround) {
+          await tree.createCell(
+            basicColor.value,
+            fieldCells.value,
+            logTextArray.value,
+          )
+        }
+        // this.$forceUpdate()
+      }
+    }
+
+    function logNewFullCycle() {
+      logTextArray.value.push('========= New cycle =========')
+    }
+
+    function restart() {
+      cleanField()
+      console.log('CleanField')
+
+      for (const tree of digitalTrees.value) {
+        tree.reset()
+      }
+
+      if (isCanChangeColor.value) {
+        changeTreesColor()
+      }
+      // logFieldCell()
+      configBeforeStart()
+      console.log('config')
+    }
+
+    function cleanField() {
+      for (const raw of fieldCells.value) {
+        for (const cell of raw) {
+          cell.setFieldType(basicColor.value)
+        }
+      }
+    }
+
+    function changeTreesColor() {
+      for (const tree of digitalTrees.value) {
+        tree.changeRandomColor()
+      }
+    }
+
+    function pauseGame() {
+      isGamePaused.value = !isGamePaused.value
+      if (isGamePaused.value === false) {
+        // this.mainCycle()
+        isGamePausedAtMoment.value = false
+      }
+    }
+
+    function ChangeColor() {
+      isCanChangeColor.value = isCanChangeColor.value === true ? false : true
+    }
+
+    async function checkTreeCount() {
+      isGamePaused.value = true
+      if (treeCount.value > treeCountPrevious.value) {
+        await addTree()
+      } else {
+        await deleteTree()
+      }
+      overwriteTreeCountPrevious()
+    }
+
+    async function addTree() {
+      while (isGamePausedAtMoment.value === true) {
+        await sleep(200)
+      }
+      console.log('Added tree')
+      new treeObject(digitalTrees.value)
+      digitalTrees.value[digitalTrees.value.length - 1].addFirstCell(
+        fieldCells.value,
+        basicColor.value,
+        logTextArray.value,
+      )
+      await pauseGame()
+    }
+
+    async function deleteTree() {
+      while (isGamePausedAtMoment.value === true) {
+        await sleep(200)
+      }
+      for (const cell of digitalTrees.value[digitalTrees.value.length - 1].cells) {
+        cell.setFieldType(basicColor.value)
+        await sleep(100)
+      }
+      digitalTrees.value.pop()
+      await pauseGame()
+    }
+
+    function overwriteTreeCountPrevious() {
+      treeCountPrevious.value = treeCount.value
+    }
+
+    function checkColumnCount() {
+      if (fieldWidth.value > fieldWidthPrevious.value) {
+        addColumn()
+      } else {
+        deleteColumn()
+      }
+      overwriteWidthPrevious()
+    }
+
+    function addColumn() {
+      for (let j = 0; j < fieldCells.value.length; j++) {
+        fieldCells.value[j].push(
+          new cellObject(
+            fieldCells.value[j].length,
+            j,
+            blockClass.value,
+            basicColor.value,
+          ),
+        )
+      }
+    }
+
+    function deleteColumn() {
+      for (let j = 0; j < fieldCells.value.length; j++) {
+        fieldCells.value[j].pop()
+      }
+    }
+
+    function overwriteWidthPrevious() {
+      fieldWidthPrevious.value = fieldCells.value[0].length
+    }
+
+    function checkRawCount() {
+      if (fieldHeight.value > fieldHeightPrevious.value) {
+        addRow()
+      } else {
+        deleteRow()
+      }
+      overwriteHeightPrevious()
+    }
+
+    function addRow() {
+      fieldCells.value.push([])
+      for (let i = 0; i < fieldCells.value[0].length; i++) {
+        fieldCells.value[fieldCells.value.length - 1].push(
+          new cellObject(
+            i,
+            fieldCells.value.length - 1,
+            blockClass.value,
+            basicColor.value,
+          ),
+        )
+      }
+    }
+
+    function deleteRow() {
+      fieldCells.value.pop()
+    }
+
+    function overwriteHeightPrevious() {
+      fieldHeightPrevious.value = fieldCells.value.length
+    }
+
+    return {
+      fieldCells,
+      digitalTrees,
+      fieldWidth,
+      fieldHeight,
+      logTextArray,
+      pauseGame,
+      isGamePaused,
+      isCanChangeColor,
+      cycleCounter,
+      fullCycleCounter,
+      timeRange,
+      ChangeColor,
+      checkTreeCount,
+      treeCount,
+      checkColumnCount,
+      checkRawCount,
+    }
+  },
 }
 export default filedBox
 </script>
 
 <style>
-@import "field-box";
+  @import "field-box"
 </style>

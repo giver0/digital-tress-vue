@@ -1,0 +1,7 @@
+.digital-tree__counter_cycle{
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  margin-bottom: 8px
+
+}

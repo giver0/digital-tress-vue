@@ -1,0 +1,47 @@
+
+.digital-tree__log-box {
+}
+
+.digital-tree__logbox-title{
+  width: 208px;
+  margin-left: 8px;
+  /* margin: 0px 8px; */
+}
+
+.digital-tree__field-left-logbox {
+  /* width: 100%; */
+  height: 152px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column-reverse;
+  justify-content: flex-start;
+  align-items: flex-start;
+  /* padding-right: 0px; */
+}
+
+.digital-tree__field-left-logbox-text {
+  display: flex;
+  justify-content: flex-start;
+  margin-left: 8px;
+  /* width: 100%; */
+}
+
+tr{
+  display: flex;
+  justify-content: flex-start;
+
+}
+
+.digital-tree__field-left-logbox-td {
+  display: flex;
+  justify-content: center;
+}
+
+.digital-tree__log-box-border{
+  border-style: dashed;
+  border-width: 2px;
+  /* border-radius: 10px; */
+  border-color: gray;
+  margin-bottom: 8px;
+}
