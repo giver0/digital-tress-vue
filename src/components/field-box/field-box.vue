@@ -46,7 +46,6 @@
               min="0"
               max="10"
               class="counter-text-input"
-              @input="checkTreeCount"
             >
           </div>
           <div class="digital-tree__counter-box">
@@ -131,6 +130,7 @@ const filedBox = {
     const fieldWidth = ref(16)
     const fieldHeight = ref(8)
     const digitalTrees = ref([])
+    const treeCount = ref(3)
     const fieldCells = ref(new Array(8).fill(0)
       .map(() => new Array(16)))
     const blockClass = ref('block')
@@ -140,9 +140,6 @@ const filedBox = {
 
     const cycleCounter = ref(0)
     const fullCycleCounter = ref(0)
-
-    const treeCount = ref(3)
-    const treeCountPrevious = ref(3)
 
     const isGameStop = ref(false)
     const isGamePaused = ref(false)
@@ -213,7 +210,7 @@ const filedBox = {
     async function cycle() {
       while (isAnyTreesCanMove.value) {
         await sleep(timeRange.value)
-        console.log('======= new turn =======')
+        // console.log('======= new turn =======')
         createCellAtAllTree()
         cycleCounter.value += 1
         if (isGamePaused.value) {
@@ -290,15 +287,10 @@ const filedBox = {
       isCanChangeColor.value = isCanChangeColor.value === true ? false : true
     }
 
-    async function checkTreeCount() {
+    watch(() => treeCount.value, async (current, previous) => {
       isGamePaused.value = true
-      if (treeCount.value > treeCountPrevious.value) {
-        await addTree()
-      } else {
-        await deleteTree()
-      }
-      overwriteTreeCountPrevious()
-    }
+      current > previous ? await addTree() : await deleteTree()
+    })
 
     async function addTree() {
       while (isGamePausedAtMoment.value === true) {
@@ -324,10 +316,6 @@ const filedBox = {
       }
       digitalTrees.value.pop()
       await pauseGame()
-    }
-
-    function overwriteTreeCountPrevious() {
-      treeCountPrevious.value = treeCount.value
     }
 
     watch(() => fieldWidth.value, (current, previous) => {
@@ -389,7 +377,6 @@ const filedBox = {
       fullCycleCounter,
       pauseGame,
       ChangeColor,
-      checkTreeCount,
     }
   },
 }
