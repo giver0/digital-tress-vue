@@ -74,7 +74,6 @@
               step="1"
               min="1"
               max="20"
-              @input="checkRawCount"
               class="counter-text-input"
             >
           </div>
@@ -131,7 +130,6 @@ const filedBox = {
     const logTextArray = ref([])
     const fieldWidth = ref(16)
     const fieldHeight = ref(8)
-    const fieldHeightPrevious = ref(8)
     const digitalTrees = ref([])
     const fieldCells = ref(new Array(8).fill(0)
       .map(() => new Array(16)))
@@ -333,7 +331,6 @@ const filedBox = {
     }
 
     watch(() => fieldWidth.value, (current, previous) => {
-      console.log('in watch')
       current > previous ? addColumn() : deleteColumn()
     })
 
@@ -356,14 +353,9 @@ const filedBox = {
       }
     }
 
-    function checkRawCount() {
-      if (fieldHeight.value > fieldHeightPrevious.value) {
-        addRow()
-      } else {
-        deleteRow()
-      }
-      overwriteHeightPrevious()
-    }
+    watch(() => fieldHeight.value, (current, previous) => {
+      current > previous ? addRow() : deleteRow()
+    })
 
     function addRow() {
       fieldCells.value.push([])
@@ -383,10 +375,6 @@ const filedBox = {
       fieldCells.value.pop()
     }
 
-    function overwriteHeightPrevious() {
-      fieldHeightPrevious.value = fieldCells.value.length
-    }
-
     return {
       treeCount,
       timeRange,
@@ -401,7 +389,6 @@ const filedBox = {
       fullCycleCounter,
       pauseGame,
       ChangeColor,
-      checkRawCount,
       checkTreeCount,
     }
   },
