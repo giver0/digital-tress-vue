@@ -60,7 +60,6 @@
               step="1"
               min="1"
               max="20"
-              @input="checkColumnCount"
               class="counter-text-input"
             >
           </div>
@@ -116,7 +115,7 @@ import CellCounter from '../cell-counter'
 import CellsField from '../cells-field'
 import CycleCounter from '../cycle-counter'
 import LogBox from '../log-box'
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 
 const filedBox = {
   name: 'fieldBox',
@@ -131,7 +130,6 @@ const filedBox = {
   setup() {
     const logTextArray = ref([])
     const fieldWidth = ref(16)
-    const fieldWidthPrevious = ref(16)
     const fieldHeight = ref(8)
     const fieldHeightPrevious = ref(8)
     const digitalTrees = ref([])
@@ -334,14 +332,10 @@ const filedBox = {
       treeCountPrevious.value = treeCount.value
     }
 
-    function checkColumnCount() {
-      if (fieldWidth.value > fieldWidthPrevious.value) {
-        addColumn()
-      } else {
-        deleteColumn()
-      }
-      overwriteWidthPrevious()
-    }
+    watch(() => fieldWidth.value, (current, previous) => {
+      console.log('in watch')
+      current > previous ? addColumn() : deleteColumn()
+    })
 
     function addColumn() {
       for (let j = 0; j < fieldCells.value.length; j++) {
@@ -360,10 +354,6 @@ const filedBox = {
       for (let j = 0; j < fieldCells.value.length; j++) {
         fieldCells.value[j].pop()
       }
-    }
-
-    function overwriteWidthPrevious() {
-      fieldWidthPrevious.value = fieldCells.value[0].length
     }
 
     function checkRawCount() {
@@ -398,22 +388,21 @@ const filedBox = {
     }
 
     return {
-      fieldCells,
-      digitalTrees,
+      treeCount,
+      timeRange,
       fieldWidth,
+      fieldCells,
       fieldHeight,
       logTextArray,
-      pauseGame,
+      cycleCounter,
+      digitalTrees,
       isGamePaused,
       isCanChangeColor,
-      cycleCounter,
       fullCycleCounter,
-      timeRange,
+      pauseGame,
       ChangeColor,
-      checkTreeCount,
-      treeCount,
-      checkColumnCount,
       checkRawCount,
+      checkTreeCount,
     }
   },
 }
