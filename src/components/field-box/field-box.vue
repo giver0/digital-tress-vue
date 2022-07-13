@@ -114,7 +114,7 @@ import CellCounter from '../cell-counter'
 import CellsField from '../cells-field'
 import CycleCounter from '../cycle-counter'
 import LogBox from '../log-box'
-import { ref, onMounted, watch } from 'vue'
+import { ref, onMounted, watch, computed } from 'vue'
 
 const filedBox = {
   name: 'fieldBox',
@@ -148,6 +148,13 @@ const filedBox = {
     const isGamePaused = ref(false)
     const isGamePausedAtMoment = ref(false)
     const isCanChangeColor = ref(true)
+
+    const isAnyTreesCanMove = computed(() => {
+      const isFreeCellsArray = digitalTrees.value
+        .map(Tree => Tree.isFreeCellsAround)
+      const isCanMove = isFreeCellsArray.includes(true)
+      return isCanMove
+    })
 
     console.log('Hi')
     createFieldObject()
@@ -204,7 +211,7 @@ const filedBox = {
     }
 
     async function cycle() {
-      while (isAnyTreesCanMove()) {
+      while (isAnyTreesCanMove.value) {
         await sleep(timeRange.value)
         console.log('======= new turn =======')
         createCellAtAllTree()
@@ -216,13 +223,6 @@ const filedBox = {
       }
       fullCycleCounter.value += 1
       logNewFullCycle()
-    }
-
-    function isAnyTreesCanMove() {
-      const isFreeCellsArray = digitalTrees.value
-        .map(Tree => Tree.isFreeCellsAround)
-      const isCanMove = isFreeCellsArray.includes(true)
-      return isCanMove
     }
 
     function sleep(ms) {
