@@ -153,6 +153,19 @@ const filedBox = {
       return isCanMove
     })
 
+    watch(() => treeCount.value, async (current, previous) => {
+      isGamePaused.value = true
+      current > previous ? await addTree() : await deleteTree()
+    })
+
+    watch(() => fieldWidth.value, (current, previous) => {
+      current > previous ? addColumn() : deleteColumn()
+    })
+
+    watch(() => fieldHeight.value, (current, previous) => {
+      current > previous ? addRow() : deleteRow()
+    })
+
     console.log('Hi')
     createFieldObject()
     for (let treeCounter = 0; treeCounter < treeCount.value; treeCounter++) {
@@ -287,11 +300,6 @@ const filedBox = {
       isCanChangeColor.value = isCanChangeColor.value === true ? false : true
     }
 
-    watch(() => treeCount.value, async (current, previous) => {
-      isGamePaused.value = true
-      current > previous ? await addTree() : await deleteTree()
-    })
-
     async function addTree() {
       while (isGamePausedAtMoment.value === true) {
         await sleep(200)
@@ -318,10 +326,6 @@ const filedBox = {
       await pauseGame()
     }
 
-    watch(() => fieldWidth.value, (current, previous) => {
-      current > previous ? addColumn() : deleteColumn()
-    })
-
     function addColumn() {
       for (let j = 0; j < fieldCells.value.length; j++) {
         fieldCells.value[j].push(
@@ -340,10 +344,6 @@ const filedBox = {
         fieldCells.value[j].pop()
       }
     }
-
-    watch(() => fieldHeight.value, (current, previous) => {
-      current > previous ? addRow() : deleteRow()
-    })
 
     function addRow() {
       fieldCells.value.push([])
