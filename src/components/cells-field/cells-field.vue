@@ -12,6 +12,7 @@
       >
         <CellBlock
           :cellObject="cell"
+          @click="$emit('clicked', cell.i, cell.j)"
         />
       </div>
     </div>

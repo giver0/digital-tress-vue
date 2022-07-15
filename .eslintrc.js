@@ -56,7 +56,7 @@ module.exports = {
     'prefer-arrow-callback': 'error',
     'arrow-spacing': 'error',
     'arrow-parens': ['error', 'always'],
-    'quotes': ['error', 'single', { 'allowTemplateLiterals': true }],
+    'quotes': ['warn', 'single', { 'allowTemplateLiterals': true }],
     'prefer-template': 'error',
     'template-curly-spacing': ['error', 'always'],
     'vue/valid-v-slot': ['error', { allowModifiers: true }],
@@ -79,7 +79,7 @@ module.exports = {
     'no-nested-ternary': 'off',
     'consistent-return': 'off',
     yoda: 'error',
-    semi: ['error', 'never'],
+    semi: ['warn', 'never'],
     indent: 'off', // два пробіли
     'template-curly-spacing': 'off',
     'max-len': ['off'],

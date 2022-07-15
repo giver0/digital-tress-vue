@@ -5,8 +5,36 @@
       <div>
         <CellsField
           :fieldCells="fieldCells"
+          @clicked="displayCellParam"
         />
-
+        <div
+          v-if="displayCell.parentTree?.id"
+        >
+          <div>
+            type - {{displayCell.type}}
+          </div>
+          <div>
+            i - {{displayCell.i}}
+          </div>
+          <div>
+            j - {{displayCell.j}}
+          </div>
+          <div>
+            id - {{displayCell.id}}
+          </div>
+          <div>
+            indexInTree - {{displayCell.indexInTree}}
+          </div>
+          <div>
+            isCellFalling - {{displayCell.isCellFalling}}
+          </div>
+          <div>
+            parentTree - {{displayCell.parentTree?.id}}
+          </div>
+          <div>
+            isFreeCellsAround - {{displayCell.parentTree?.isFreeCellsAround}}
+          </div>
+        </div>
       </div>
       <div class="digital-tree__control">
         <ControlButton
@@ -127,16 +155,15 @@ const filedBox = {
   },
   setup() {
     const logTextArray = ref([])
-    const fieldWidth = ref(16)
-    const fieldHeight = ref(8)
+    const fieldWidth = ref(8)
+    const fieldHeight = ref(4)
     const digitalTrees = ref([])
     const treeCount = ref(3)
-    const fieldCells = ref(new Array(8).fill(0)
-      .map(() => new Array(16)))
+    const fieldCells = ref(new Array(fieldHeight.value).fill(0)
+      .map(() => new Array(fieldWidth.value)))
     const blockClass = ref('block')
-    const basicColor = ref('#808080')
 
-    const timeRange = ref(200)
+    const timeRange = ref(1000)
 
     const cycleCounter = ref(0)
     const fullCycleCounter = ref(0)
@@ -145,12 +172,16 @@ const filedBox = {
     const isGamePaused = ref(false)
     const isGamePausedAtMoment = ref(false)
     const isCanChangeColor = ref(true)
+    const displayCell = ref({})
 
+    // const isAnyTreesCanMove = computed(() => {
+    //   const isFreeCellsArray = digitalTrees.value
+    //     .map(Tree => Tree.isFreeCellsAround)
+    //   const isCanMove = isFreeCellsArray.includes(true)
+    //   return isCanMove
+    // })
     const isAnyTreesCanMove = computed(() => {
-      const isFreeCellsArray = digitalTrees.value
-        .map(Tree => Tree.isFreeCellsAround)
-      const isCanMove = isFreeCellsArray.includes(true)
-      return isCanMove
+      return true
     })
 
     watch(() => treeCount.value, async (current, previous) => {
@@ -186,7 +217,6 @@ const filedBox = {
             i,
             j,
             blockClass.value,
-            basicColor.value,
           )
         }
       }
@@ -201,7 +231,6 @@ const filedBox = {
       for (const tree of digitalTrees.value) {
         tree.addFirstCell(
           fieldCells.value,
-          basicColor.value,
           logTextArray.value,
         )
       }
@@ -243,14 +272,18 @@ const filedBox = {
 
     async function createCellAtAllTree() {
       for (const tree of digitalTrees.value) {
-        if (tree.isFreeCellsAround) {
-          await tree.createCell(
-            basicColor.value,
-            fieldCells.value,
-            logTextArray.value,
-          )
-        }
+        await tree.chooseAction(
+          fieldCells.value,
+          logTextArray.value,
+        )
         // this.$forceUpdate()
+      }
+    }
+
+    function fallDownCells() {
+      for (const tree of digitalTrees.value) {
+        if (tree.lastCell.isCellFalling) {
+        }
       }
     }
 
@@ -277,7 +310,7 @@ const filedBox = {
     function cleanField() {
       for (const raw of fieldCells.value) {
         for (const cell of raw) {
-          cell.setFieldType(basicColor.value)
+          cell.setFieldType()
         }
       }
     }
@@ -308,7 +341,6 @@ const filedBox = {
       new treeObject(digitalTrees.value)
       digitalTrees.value[digitalTrees.value.length - 1].addFirstCell(
         fieldCells.value,
-        basicColor.value,
         logTextArray.value,
       )
       await pauseGame()
@@ -319,7 +351,7 @@ const filedBox = {
         await sleep(200)
       }
       for (const cell of digitalTrees.value[digitalTrees.value.length - 1].cells) {
-        cell.setFieldType(basicColor.value)
+        cell.setFieldType()
         await sleep(100)
       }
       digitalTrees.value.pop()
@@ -333,7 +365,6 @@ const filedBox = {
             fieldCells.value[j].length,
             j,
             blockClass.value,
-            basicColor.value,
           ),
         )
       }
@@ -353,7 +384,6 @@ const filedBox = {
             i,
             fieldCells.value.length - 1,
             blockClass.value,
-            basicColor.value,
           ),
         )
       }
@@ -363,12 +393,18 @@ const filedBox = {
       fieldCells.value.pop()
     }
 
+    function displayCellParam(i, j) {
+      console.log(`display cell`, i, ' ', j);
+      displayCell.value = fieldCells.value[j][i]
+    }
+
     return {
       treeCount,
       timeRange,
       fieldWidth,
       fieldCells,
       fieldHeight,
+      displayCell,
       logTextArray,
       cycleCounter,
       digitalTrees,
@@ -377,6 +413,7 @@ const filedBox = {
       fullCycleCounter,
       pauseGame,
       ChangeColor,
+      displayCellParam,
     }
   },
 }

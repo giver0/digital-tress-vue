@@ -9,6 +9,12 @@
   /* border-radius: 5px; */
 }
 
+.block:hover {
+  border: 5px dashed black;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+
 .cellText{
   filter: invert(1);
 }

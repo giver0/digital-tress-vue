@@ -1,7 +1,10 @@
+import { BASIC_COLOR } from "@/constant/basic"
+
 export default class treeObject {
   constructor(digitalTrees) {
     this.id = digitalTrees.length
     this.cells = []
+    this.cellCount = 0
     this.lastCell = null
     this.headColor = null
     this.bodyColor = null
@@ -21,14 +24,11 @@ export default class treeObject {
     }
     return randomColor
   }
-  addFirstCell(fieldCells, basicColor, logTextArray) {
+  addFirstCell(fieldCells, logTextArray) {
     try {
       const firstCell = this.randomCellFloor(
         fieldCells,
-        basicColor,
       )
-      console.log(firstCell)
-      console.log(firstCell.elementById)
       this.cells.push(firstCell)
 
       this.cells[0].setColor(this.headColor)
@@ -42,7 +42,7 @@ export default class treeObject {
       console.log(error)
     }
   }
-  chooseRandomStartCell(fieldCells, basicColor) {
+  chooseRandomStartCell(fieldCells) {
     let whileCounter = 0
     let j
     let i
@@ -52,13 +52,13 @@ export default class treeObject {
       // logSomeText("In chooseRandomStartCell()")
       console.log('In chooseRandomStartCell()')
 
-      if (fieldCells[j][i].color === basicColor) {
+      if (fieldCells[j][i].color === BASIC_COLOR) {
         return fieldCells[j][i]
       }
       whileCounter += 1
    }
   }
-  randomCellFloor(fieldCells, basicColor) {
+  randomCellFloor(fieldCells) {
     let whileCounter = 0
     let j
     let i
@@ -88,22 +88,36 @@ export default class treeObject {
     // createCellTree() {
     //       createCell(this.lastCell)
     //   }
-  createCell(basicColor, fieldCells, logTextArray) {
+  chooseAction(fieldCells, logTextArray) {
+    if (this.lastCell.isCellFalling) {
+      // this.moveCellDown(fieldCells)
+      this.lastCell.moveDown(fieldCells)
+    } else {
+      this.createCell(fieldCells, logTextArray)
+    }
+  }
+  createCell(fieldCells, logTextArray) {
     const freeCellsArray = this.FreeCellsAround(
       this.lastCell,
-      basicColor,
       fieldCells,
     )
+    console.log('freeCellsArray', freeCellsArray);
 
     if (freeCellsArray.length === 0) {
       this.isFreeCellsAround = false
+      this.lastCell.isCellFalling = true
+      if (this.cellCount > 1) {
+        this.deleteTreeBody()
+      }
     } else {
       const FreeCellCoordinate = this.chooseRandomPoint(freeCellsArray)
       const [j, i] = FreeCellCoordinate
       this.addNextCell(j, i, fieldCells, logTextArray)
     }
   }
-  FreeCellsAround(cell, basicColor, fieldCells) {
+  FreeCellsAround(cell, fieldCells) {
+    console.log('in free cell');
+    console.log(cell.i, ' ', cell.j);
     const freeFields = []
     let i = cell.i - 1
     let j = cell.j - 1
@@ -113,7 +127,7 @@ export default class treeObject {
     for (; j < jEnd; j++) {
       for (i = cell.i - 1; i < iEnd; i++) {
         if (this.isCoordinateInField(i, j, fieldCells)) {
-          if (fieldCells[j][i].color === basicColor) {
+          if (fieldCells[j][i].color === BASIC_COLOR) {
             freeFields.push([j, i])
           }
         }
@@ -143,11 +157,11 @@ export default class treeObject {
     this.cells.length - 1
 
     nextCell.indexInTree = this.cells.length - 1
-    nextCell.previousCell = this.lastCell
     nextCell.parentTree = this
     this.cells.push(nextCell)
     nextCell.parentTree.refreshLastCell()
     this.nextCell = nextCell
+    this.cellCount = this.cellCount + 1
     this.createCellLog(logTextArray)
   }
 
@@ -176,5 +190,38 @@ export default class treeObject {
   changeRandomColor() {
     this.headColor = this.generateRandomColor()
     this.bodyColor = this.generateRandomColor()
+  }
+
+  deleteTreeBody() {
+    console.log('in delete body');
+    for (let index = 0; index < this.cells.length - 1; index++) {
+      this.cells[index].setFieldType()
+    }
+    this.cellCount = 1
+  }
+  moveCellDown() {
+    console.log('i:', this.i, 'j:', this.j, 'Tree id:', this.parentTree);
+    console.log('field move', fieldCells[this.j][this.i]);
+    if (this.lastCell.j === fieldCells.length - 1) {
+      console.log('At bottom');
+      this.lastCell.isCellFalling = false
+      this.isFreeCellsAround = true
+    } else {
+      // const nextJ = this.j + 1
+      console.log('need move');
+      const bottomCell = fieldCells[this.j + 1][this.i]
+      const isBottomCellField = bottomCell.type === 'field'
+      if (isBottomCellField) {
+        console.log('moveTo');
+        console.log(this);
+        for (const key in this) {
+          bottomCell[key] = this[key];
+        }
+        bottomCell.j = bottomCell.j + 1
+        bottomCell.id = `i${bottomCell.i}j${bottomCell.j}`
+        this.parentTree.lastCell = bottomCell
+        this.setFieldType()
+      }
+    }
   }
 }
