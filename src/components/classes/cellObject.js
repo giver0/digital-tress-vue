@@ -35,35 +35,7 @@ export default class cellObject {
     this.isCellFalling = false
   }
 
-  moveDown(fieldCells, logTextArray) {
-    console.log('in move down', 'i:', this.i, 'j:', this.j, 'Tree id:', this.parentTree);
-    console.log('field move', fieldCells[this.j][this.i]);
-    if (this.j === fieldCells.length - 1) {
-      console.log('At bottom');
-      this.isCellFalling = false
-      this.parentTree.isFreeCellsAround = true
-      this.parentTree.createCell(fieldCells, logTextArray)
-    } else {
-      // const nextJ = this.j + 1
-      console.log('need move');
-      const bottomCell = fieldCells[this.j + 1][this.i]
-      const isBottomCellField = bottomCell.type === 'field'
-      console.log('isBottomCellField', isBottomCellField);
-      if (isBottomCellField) {
-        console.log('moveTo');
-        console.log(this);
-        for (const key in this) {
-          bottomCell[key] = this[key];
-        }
-        bottomCell.j = bottomCell.j + 1
-        bottomCell.id = `i${bottomCell.i}j${bottomCell.j}`
-        this.parentTree.lastCell = bottomCell
-        this.setFieldType()
-      }
-    }
-  }
-
-  moveCellTo(i, j) {
-
+  generatedEnergyByCell(fieldCells) {
+    return fieldCells.length - this.j
   }
 }

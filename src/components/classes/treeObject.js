@@ -214,17 +214,17 @@ export default class treeObject {
   }
 
   deleteTreeBody() {
-    console.log('in delete body');
+    // console.log('in delete body');
 
     for (let index = 0; index < this.cells.length - 1; index++) {
       this.cells[index].setFieldType()
     }
-    console.log(this.cells);
+    // console.log(this.cells);
     while (this.cells.length > 1) {
       this.cells.shift()
     }
-    console.log(this.cells.length);
-    console.log('cells', this.cells);
+    // console.log(this.cells.length);
+    // console.log('cells', this.cells);
     this.counterCell = 1
   }
 
@@ -232,20 +232,20 @@ export default class treeObject {
     // console.log('i:', this.i, 'j:', this.j, 'Tree id:', this.parentTree);
     // console.log('field move', fieldCells[this.j][this.i]);
     if (this.lastCell.j === fieldCells.length - 1) {
-      console.log('At bottom');
+      // console.log('At bottom');
       this.lastCell.isCellFalling = false
       this.lastCell.isFreeCellsAround = true
       this.createCell(fieldCells, logTextArray)
     } else {
       // const nextJ = this.j + 1
-      console.log('need move');
+      // console.log('need move');
       this.positionCurrent = this.lastCell
       this.positionNext = fieldCells[this.positionCurrent.j + 1][this.positionCurrent.i]
       const isBottomCellField = this.positionNext.type === TYPE_FIELD
-      console.log('isBottomCellField', isBottomCellField);
+      // console.log('isBottomCellField', isBottomCellField);
       if (isBottomCellField) {
-        console.log('moveTo');
-        console.log(this);
+        // console.log('moveTo');
+        // console.log(this);
 
         const keyToCopy = [
           'type',
@@ -280,8 +280,11 @@ export default class treeObject {
     })
 
     upperCellsIsField = upperCellsIsField.filter(cell => cell !== undefined)
+    let generatedEnergy = 0
+    upperCellsIsField?.forEach(cell => generatedEnergy = generatedEnergy + cell.generatedEnergyByCell(fieldCells))
+    console.log('generatedEnergy', generatedEnergy);
 
     console.log('upper cells', upperCellsIsField, upperCellsIsField.length);
-    this.energy = this.energy - upperCellsIsField.length
+    this.energy = this.energy - this.cells.length + generatedEnergy
   }
 }
