@@ -155,10 +155,10 @@ const filedBox = {
   },
   setup() {
     const logTextArray = ref([])
-    const fieldWidth = ref(8)
-    const fieldHeight = ref(4)
+    const fieldWidth = ref(4)
+    const fieldHeight = ref(3)
     const digitalTrees = ref([])
-    const treeCount = ref(3)
+    const treeCount = ref(2)
     const fieldCells = ref(new Array(fieldHeight.value).fill(0)
       .map(() => new Array(fieldWidth.value)))
     const blockClass = ref('block')
@@ -253,7 +253,8 @@ const filedBox = {
       while (isAnyTreesCanMove.value) {
         await sleep(timeRange.value)
         // console.log('======= new turn =======')
-        createCellAtAllTree()
+        chooseActionAtAllTree()
+        console.log('tree in main cycle', digitalTrees.value[0])
         cycleCounter.value += 1
         if (isGamePaused.value) {
           isGamePausedAtMoment.value = true
@@ -270,7 +271,7 @@ const filedBox = {
       })
     }
 
-    async function createCellAtAllTree() {
+    async function chooseActionAtAllTree() {
       for (const tree of digitalTrees.value) {
         await tree.chooseAction(
           fieldCells.value,
@@ -394,7 +395,7 @@ const filedBox = {
     }
 
     function displayCellParam(i, j) {
-      console.log(`display cell`, i, ' ', j);
+      console.log(`display cell`, i, ' ', j, fieldCells.value[j][i]);
       displayCell.value = fieldCells.value[j][i]
     }
 
