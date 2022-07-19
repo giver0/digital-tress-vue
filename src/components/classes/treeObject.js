@@ -14,6 +14,7 @@ export default class treeObject {
     this.bodyColor = this.generateRandomColor()
     this.positionCurrent = null
     this.positionNext = null
+    this.energy = 10
     digitalTrees.push(this)
   }
   generateRandomColor() {
@@ -92,6 +93,7 @@ export default class treeObject {
     } else {
       this.createCell(fieldCells, logTextArray)
     }
+    this.refreshEnergy(fieldCells)
   }
   createCell(fieldCells, logTextArray) {
     const freeCellsArray = this.FreeCellsAround2(
@@ -225,6 +227,7 @@ export default class treeObject {
     console.log('cells', this.cells);
     this.counterCell = 1
   }
+
   moveCellDown(fieldCells, logTextArray) {
     // console.log('i:', this.i, 'j:', this.j, 'Tree id:', this.parentTree);
     // console.log('field move', fieldCells[this.j][this.i]);
@@ -261,5 +264,24 @@ export default class treeObject {
         this.positionCurrent.setFieldType()
       }
     }
+  }
+
+  refreshEnergy(fieldCells) {
+    let upperCellsIsField = this.cells.map(cell => {
+      const isCellAtUpperPoint = cell.j === 0
+      if (isCellAtUpperPoint) {
+        return cell
+      }
+      const isUpperCellField = fieldCells[cell.j - 1][cell.i]?.type === TYPE_FIELD
+
+      if (isUpperCellField || isCellAtUpperPoint) {
+        return cell
+      }
+    })
+
+    upperCellsIsField = upperCellsIsField.filter(cell => cell !== undefined)
+
+    console.log('upper cells', upperCellsIsField, upperCellsIsField.length);
+    this.energy = this.energy - upperCellsIsField.length
   }
 }

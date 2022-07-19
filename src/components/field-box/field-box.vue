@@ -23,6 +23,9 @@
             id - {{displayCell.id}}
           </div>
           <div>
+            color - {{displayCell.color}}
+          </div>
+          <div>
             indexInTree - {{displayCell.indexInTree}}
           </div>
           <div>
@@ -34,6 +37,7 @@
           <div>
             isFreeCellsAround - {{displayCell.parentTree?.isFreeCellsAround}}
           </div>
+
         </div>
       </div>
       <div class="digital-tree__control">
@@ -254,7 +258,7 @@ const filedBox = {
         await sleep(timeRange.value)
         // console.log('======= new turn =======')
         chooseActionAtAllTree()
-        console.log('tree in main cycle', digitalTrees.value[0])
+        console.log('tree in main cycle', digitalTrees.value)
         cycleCounter.value += 1
         if (isGamePaused.value) {
           isGamePausedAtMoment.value = true
@@ -394,9 +398,11 @@ const filedBox = {
       fieldCells.value.pop()
     }
 
-    function displayCellParam(i, j) {
-      console.log(`display cell`, i, ' ', j, fieldCells.value[j][i]);
-      displayCell.value = fieldCells.value[j][i]
+    function displayCellParam(cell) {
+      console.log('display cell', cell);
+      // console.log(`display cell`, i, ' ', j, fieldCells.value[j][i]);
+      // displayCell.value = fieldCells.value[j][i]
+      displayCell.value = cell
     }
 
     return {
