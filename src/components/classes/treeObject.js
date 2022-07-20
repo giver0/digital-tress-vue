@@ -1,4 +1,9 @@
-import { BASIC_COLOR, TYPE_FIELD } from "@/constant/basic"
+import {
+  TYPE_FIELD,
+  BASIC_COLOR,
+  GENOME_COUNT,
+  GENOME_MAX_VALUE,
+} from "@/constant/basic"
 
 export default class treeObject {
   constructor(digitalTrees) {
@@ -15,8 +20,10 @@ export default class treeObject {
     this.positionCurrent = null
     this.positionNext = null
     this.energy = 10
+    this.genome = this.gererateGenome()
     digitalTrees.push(this)
   }
+
   generateRandomColor() {
     let randomColor = BASIC_COLOR
     while (randomColor === BASIC_COLOR) {
@@ -25,6 +32,7 @@ export default class treeObject {
     }
     return randomColor
   }
+
   addFirstCell(fieldCells, logTextArray) {
     try {
       const firstCell = this.randomCellFloor(
@@ -36,6 +44,7 @@ export default class treeObject {
       this.cells[0].setCellType()
       this.cells[0].parentTree = this
       this.cells[0].indexInTree = this.cells.length - 1
+      this.cells[0].genome = 0
       this.refreshLastCell()
       this.createCellLog(logTextArray)
     } catch (error) {
@@ -43,6 +52,7 @@ export default class treeObject {
       console.log(error)
     }
   }
+
   chooseRandomStartCell(fieldCells) {
     let whileCounter = 0
     let j
@@ -59,6 +69,7 @@ export default class treeObject {
       whileCounter += 1
    }
   }
+
   randomCellFloor(fieldCells) {
     let whileCounter = 0
     let j
@@ -75,26 +86,110 @@ export default class treeObject {
       whileCounter += 1
    }
   }
+
   getRandomInt(min, max) {
     min = Math.ceil(min)
     max = Math.floor(max)
     return Math.floor(Math.random() * (max - min)) + min // Максимум не включается, минимум включается
   }
+
+  gererateGenome() {
+    const genome = new Array(GENOME_COUNT).fill(0)
+    .map(() => {
+      return {
+        upGen: this.getRandomInt(0, GENOME_MAX_VALUE),
+        downGen: this.getRandomInt(0, GENOME_MAX_VALUE),
+        leftGen: this.getRandomInt(0, GENOME_MAX_VALUE),
+        rightGen: this.getRandomInt(0, GENOME_MAX_VALUE),
+      }
+    })
+    console.log('genome', genome);
+    return genome
+  }
+
   refreshLastCell() {
     this.lastCell = this.cells[this.cells.length - 1]
   }
-    // createCellTree() {
-    //       createCell(this.lastCell)
-    //   }
+
   chooseAction(fieldCells, logTextArray) {
     if (this.lastCell.isCellFalling) {
       // this.moveCellDown(fieldCells)
       this.moveCellDown(fieldCells, logTextArray)
     } else {
-      this.createCell(fieldCells, logTextArray)
+      this.realiseGenome(fieldCells, logTextArray)
+      // this.createCell(fieldCells, logTextArray)
     }
     this.refreshEnergy(fieldCells)
   }
+
+  realiseGenome(fieldCells, logTextArray) {
+    this.cells.forEach(cell => {
+      if (cell.color === this.headColor) {
+        const cellGenome = this.genome[cell.genome]
+        // for (const gen in cellGenome) {
+        //   cellGenome[gen]
+
+        // }
+        console.log('cellGenome', cellGenome);
+        let newI = null
+        let newJ = null
+        if (cellGenome.upGen <= 15) {
+          newI = cell.i
+          newJ = cell.j - 1
+          if (this.isNextCellField(fieldCells, newI, newJ)) {
+            this.createCellGenome(cell, fieldCells, logTextArray, newI, newJ, cellGenome.upGen)
+          }
+        }
+        if (cellGenome.downGen <= 15) {
+          newI = cell.i
+          newJ = cell.j + 1
+          if (this.isNextCellField(fieldCells, newI, newJ)) {
+            this.createCellGenome(cell, fieldCells, logTextArray, newI, newJ, cellGenome.downGen)
+          }
+        }
+        if (cellGenome.leftGen <= 15) {
+          newI = cell.i - 1
+          newJ = cell.j
+          if (this.isNextCellField(fieldCells, newI, newJ)) {
+            this.createCellGenome(cell, fieldCells, logTextArray, newI, newJ, cellGenome.leftGen)
+          }
+        }
+        if (cellGenome.rightGen <= 15) {
+          newI = cell.i + 1
+          newJ = cell.j
+          if (this.isNextCellField(fieldCells, newI, newJ)) {
+            this.createCellGenome(cell, fieldCells, logTextArray, newI, newJ, cellGenome.rightGen)
+          }
+        }
+      }
+    })
+  }
+
+  createCellGenome(cell, fieldCells, logTextArray, newI, newJ, genomeToImplement) {
+    // console.log(`next i and j`, i, j);
+    cell.setColor(this.bodyColor)
+    const nextCell = fieldCells[newJ][newI]
+    nextCell.setColor(this.headColor)
+    nextCell.setCellType()
+
+    this.counterCellAll = this.counterCellAll + 1
+    this.counterCell = this.counterCell + 1
+    nextCell.indexInTree = this.counterCellAll
+    nextCell.genome = genomeToImplement
+    nextCell.parentTree = this
+    this.cells.push(nextCell)
+    this.refreshLastCell()
+    this.createCellLog(logTextArray)
+  }
+
+  isNextCellField(fieldCells, newI, newJ) {
+    if (newJ in fieldCells && newI in fieldCells[newJ]) {
+      return fieldCells[newJ][newI]?.color === BASIC_COLOR
+    } else {
+      return false
+    }
+  }
+
   createCell(fieldCells, logTextArray) {
     const freeCellsArray = this.FreeCellsAround2(
       this.lastCell,
@@ -114,6 +209,7 @@ export default class treeObject {
       this.addNextCell(j, i, fieldCells, logTextArray)
     }
   }
+
   FreeCellsAround(cell, fieldCells) {
     // console.log('in free cell');
     // console.log(cell.i, ' ', cell.j);
@@ -134,6 +230,7 @@ export default class treeObject {
     }
     return freeFields
   }
+
   FreeCellsAround2(cell, fieldCells) {
     // console.log('in free cell');
     // console.log(cell.i, ' ', cell.j);
@@ -282,9 +379,9 @@ export default class treeObject {
     upperCellsIsField = upperCellsIsField.filter(cell => cell !== undefined)
     let generatedEnergy = 0
     upperCellsIsField?.forEach(cell => generatedEnergy = generatedEnergy + cell.generatedEnergyByCell(fieldCells))
-    console.log('generatedEnergy', generatedEnergy);
+    // console.log('generatedEnergy', generatedEnergy);
 
-    console.log('upper cells', upperCellsIsField, upperCellsIsField.length);
+    // console.log('upper cells', upperCellsIsField, upperCellsIsField.length);
     this.energy = this.energy - this.cells.length + generatedEnergy
   }
 }

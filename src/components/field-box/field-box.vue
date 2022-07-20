@@ -160,7 +160,7 @@ const filedBox = {
   setup() {
     const logTextArray = ref([])
     const fieldWidth = ref(4)
-    const fieldHeight = ref(5)
+    const fieldHeight = ref(4)
     const digitalTrees = ref([])
     const treeCount = ref(3)
     const fieldCells = ref(new Array(fieldHeight.value).fill(0)
