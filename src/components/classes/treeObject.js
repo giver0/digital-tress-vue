@@ -19,7 +19,7 @@ export default class treeObject {
     this.bodyColor = this.generateRandomColor()
     this.positionCurrent = null
     this.positionNext = null
-    this.energy = 10
+    this.energy = 20
     this.genome = this.gererateGenome()
     digitalTrees.push(this)
   }
