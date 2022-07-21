@@ -6,7 +6,7 @@ import {
 } from "@/constant/basic"
 
 export default class treeObject {
-  constructor(digitalTrees) {
+  constructor(digitalTrees, fieldCells) {
     this.id = digitalTrees.length
     this.cells = []
     this.counterCell = 0
@@ -21,6 +21,8 @@ export default class treeObject {
     this.positionNext = null
     this.energy = 20
     this.genome = this.gererateGenome()
+    this.digitalTrees = digitalTrees
+    this.fieldCells = fieldCells
     digitalTrees.push(this)
   }
 
@@ -33,11 +35,9 @@ export default class treeObject {
     return randomColor
   }
 
-  addFirstCell(fieldCells, logTextArray) {
+  addFirstCell(logTextArray) {
     try {
-      const firstCell = this.randomCellFloor(
-        fieldCells,
-      )
+      const firstCell = this.randomCellFloor()
       this.cells.push(firstCell)
 
       this.cells[0].setColor(this.headColor)
@@ -53,35 +53,35 @@ export default class treeObject {
     }
   }
 
-  chooseRandomStartCell(fieldCells) {
+  chooseRandomStartCell() {
     let whileCounter = 0
     let j
     let i
-    while (whileCounter < fieldCells.length * fieldCells[0].length) {
-      j = this.getRandomInt(0, fieldCells.length)
-      i = this.getRandomInt(0, fieldCells[0].length)
+    while (whileCounter < this.fieldCells.length * this.fieldCells[0].length) {
+      j = this.getRandomInt(0, this.fieldCells.length)
+      i = this.getRandomInt(0, this.fieldCells[0].length)
       // logSomeText("In chooseRandomStartCell()")
       console.log('In chooseRandomStartCell()')
 
-      if (fieldCells[j][i].color === BASIC_COLOR) {
-        return fieldCells[j][i]
+      if (this.fieldCells[j][i].color === BASIC_COLOR) {
+        return this.fieldCells[j][i]
       }
       whileCounter += 1
    }
   }
 
-  randomCellFloor(fieldCells) {
+  randomCellFloor() {
     let whileCounter = 0
     let j
     let i
-    while (whileCounter < fieldCells[0].length * 2) {
-      j = fieldCells.length - 1
-      i = this.getRandomInt(0, fieldCells[0].length)
+    while (whileCounter < this.fieldCells[0].length * 2) {
+      j = this.fieldCells.length - 1
+      i = this.getRandomInt(0, this.fieldCells[0].length)
       // logSomeText("In chooseRandomStartCell()")
       console.log('In chooseRandomStartCell()')
 
-      if (fieldCells[j][i].type === TYPE_FIELD) {
-        return fieldCells[j][i]
+      if (this.fieldCells[j][i].type === TYPE_FIELD) {
+        return this.fieldCells[j][i]
       }
       whileCounter += 1
    }
@@ -111,18 +111,18 @@ export default class treeObject {
     this.lastCell = this.cells[this.cells.length - 1]
   }
 
-  chooseAction(fieldCells, logTextArray) {
+  chooseAction(logTextArray) {
     if (this.lastCell.isCellFalling) {
-      // this.moveCellDown(fieldCells)
-      this.moveCellDown(fieldCells, logTextArray)
+      // this.moveCellDown(this.fieldCells)
+      this.moveCellDown(logTextArray)
     } else {
-      this.realiseGenome(fieldCells, logTextArray)
-      // this.createCell(fieldCells, logTextArray)
+      this.realiseGenome(logTextArray)
+      // this.createCell(logTextArray)
     }
-    this.refreshEnergy(fieldCells)
+    this.refreshEnergy()
   }
 
-  realiseGenome(fieldCells, logTextArray) {
+  realiseGenome(logTextArray) {
     this.cells.forEach(cell => {
       if (cell.color === this.headColor) {
         const cellGenome = this.genome[cell.genome]
@@ -136,39 +136,39 @@ export default class treeObject {
         if (cellGenome.upGen <= 15) {
           newI = cell.i
           newJ = cell.j - 1
-          if (this.isNextCellField(fieldCells, newI, newJ)) {
-            this.createCellGenome(cell, fieldCells, logTextArray, newI, newJ, cellGenome.upGen)
+          if (this.isNextCellField(newI, newJ)) {
+            this.createCellGenome(cell, logTextArray, newI, newJ, cellGenome.upGen)
           }
         }
         if (cellGenome.downGen <= 15) {
           newI = cell.i
           newJ = cell.j + 1
-          if (this.isNextCellField(fieldCells, newI, newJ)) {
-            this.createCellGenome(cell, fieldCells, logTextArray, newI, newJ, cellGenome.downGen)
+          if (this.isNextCellField(newI, newJ)) {
+            this.createCellGenome(cell, logTextArray, newI, newJ, cellGenome.downGen)
           }
         }
         if (cellGenome.leftGen <= 15) {
           newI = cell.i - 1
           newJ = cell.j
-          if (this.isNextCellField(fieldCells, newI, newJ)) {
-            this.createCellGenome(cell, fieldCells, logTextArray, newI, newJ, cellGenome.leftGen)
+          if (this.isNextCellField(newI, newJ)) {
+            this.createCellGenome(cell, logTextArray, newI, newJ, cellGenome.leftGen)
           }
         }
         if (cellGenome.rightGen <= 15) {
           newI = cell.i + 1
           newJ = cell.j
-          if (this.isNextCellField(fieldCells, newI, newJ)) {
-            this.createCellGenome(cell, fieldCells, logTextArray, newI, newJ, cellGenome.rightGen)
+          if (this.isNextCellField(newI, newJ)) {
+            this.createCellGenome(cell, logTextArray, newI, newJ, cellGenome.rightGen)
           }
         }
       }
     })
   }
 
-  createCellGenome(cell, fieldCells, logTextArray, newI, newJ, genomeToImplement) {
+  createCellGenome(cell, logTextArray, newI, newJ, genomeToImplement) {
     // console.log(`next i and j`, i, j);
     cell.setColor(this.bodyColor)
-    const nextCell = fieldCells[newJ][newI]
+    const nextCell = this.fieldCells[newJ][newI]
     nextCell.setColor(this.headColor)
     nextCell.setCellType()
 
@@ -182,18 +182,17 @@ export default class treeObject {
     this.createCellLog(logTextArray)
   }
 
-  isNextCellField(fieldCells, newI, newJ) {
-    if (newJ in fieldCells && newI in fieldCells[newJ]) {
-      return fieldCells[newJ][newI]?.color === BASIC_COLOR
+  isNextCellField(newI, newJ) {
+    if (newJ in this.fieldCells && newI in this.fieldCells[newJ]) {
+      return this.fieldCells[newJ][newI]?.color === BASIC_COLOR
     } else {
       return false
     }
   }
 
-  createCell(fieldCells, logTextArray) {
+  createCell(logTextArray) {
     const freeCellsArray = this.FreeCellsAround2(
       this.lastCell,
-      fieldCells,
     )
     // console.log('freeCellsArray', freeCellsArray);
 
@@ -206,11 +205,11 @@ export default class treeObject {
     } else {
       const FreeCellCoordinate = this.chooseRandomPoint(freeCellsArray)
       const [j, i] = FreeCellCoordinate
-      this.addNextCell(j, i, fieldCells, logTextArray)
+      this.addNextCell(j, i, logTextArray)
     }
   }
 
-  FreeCellsAround(cell, fieldCells) {
+  FreeCellsAround(cell) {
     // console.log('in free cell');
     // console.log(cell.i, ' ', cell.j);
     const freeFields = []
@@ -221,8 +220,8 @@ export default class treeObject {
 
     for (; j < jEnd; j++) {
       for (i = cell.i - 1; i < iEnd; i++) {
-        if (this.isCoordinateInField(i, j, fieldCells)) {
-          if (fieldCells[j][i].color === BASIC_COLOR) {
+        if (this.isCoordinateInField(i, j)) {
+          if (this.fieldCells[j][i].color === BASIC_COLOR) {
             freeFields.push([j, i])
           }
         }
@@ -231,7 +230,7 @@ export default class treeObject {
     return freeFields
   }
 
-  FreeCellsAround2(cell, fieldCells) {
+  FreeCellsAround2(cell) {
     // console.log('in free cell');
     // console.log(cell.i, ' ', cell.j);
     const freeFields = []
@@ -247,8 +246,8 @@ export default class treeObject {
 
     for (; j < jEnd; j++) {
       for (i = cell.i - 1; i < iEnd; i++) {
-        if (j in fieldCells && i in fieldCells[j]) {
-          if (fieldCells[j][i].type === TYPE_FIELD) {
+        if (j in this.fieldCells && i in this.fieldCells[j]) {
+          if (this.fieldCells[j][i].type === TYPE_FIELD) {
             freeFields.push([j, i])
           }
         }
@@ -257,8 +256,8 @@ export default class treeObject {
     return freeFields
   }
 
-  isCoordinateInField(i, j, fieldCells) {
-    return i >= 0 && i < fieldCells[0].length && j >= 0 && j < fieldCells.length
+  isCoordinateInField(i, j) {
+    return i >= 0 && i < this.fieldCells[0].length && j >= 0 && j < this.fieldCells.length
   }
 
   chooseRandomPoint(freeCells) {
@@ -266,10 +265,10 @@ export default class treeObject {
     return freeCells[randomValue]
   }
 
-  addNextCell(j, i, fieldCells, logTextArray) {
+  addNextCell(j, i, logTextArray) {
     // console.log(`next i and j`, i, j);
     this.lastCell.setColor(this.bodyColor)
-    const nextCell = fieldCells[j][i]
+    const nextCell = this.fieldCells[j][i]
     nextCell.setColor(this.headColor)
     nextCell.setCellType()
 
@@ -325,19 +324,19 @@ export default class treeObject {
     this.counterCell = 1
   }
 
-  moveCellDown(fieldCells, logTextArray) {
+  moveCellDown(logTextArray) {
     // console.log('i:', this.i, 'j:', this.j, 'Tree id:', this.parentTree);
-    // console.log('field move', fieldCells[this.j][this.i]);
-    if (this.lastCell.j === fieldCells.length - 1) {
+    // console.log('field move', this.fieldCells[this.j][this.i]);
+    if (this.lastCell.j === this.fieldCells.length - 1) {
       // console.log('At bottom');
       this.lastCell.isCellFalling = false
       this.lastCell.isFreeCellsAround = true
-      this.createCell(fieldCells, logTextArray)
+      this.createCell(this.fieldCells, logTextArray)
     } else {
       // const nextJ = this.j + 1
       // console.log('need move');
       this.positionCurrent = this.lastCell
-      this.positionNext = fieldCells[this.positionCurrent.j + 1][this.positionCurrent.i]
+      this.positionNext = this.fieldCells[this.positionCurrent.j + 1][this.positionCurrent.i]
       const isBottomCellField = this.positionNext.type === TYPE_FIELD
       // console.log('isBottomCellField', isBottomCellField);
       if (isBottomCellField) {
@@ -363,13 +362,13 @@ export default class treeObject {
     }
   }
 
-  refreshEnergy(fieldCells) {
+  refreshEnergy() {
     let upperCellsIsField = this.cells.map(cell => {
       const isCellAtUpperPoint = cell.j === 0
       if (isCellAtUpperPoint) {
         return cell
       }
-      const isUpperCellField = fieldCells[cell.j - 1][cell.i]?.type === TYPE_FIELD
+      const isUpperCellField = this.fieldCells[cell.j - 1][cell.i]?.type === TYPE_FIELD
 
       if (isUpperCellField || isCellAtUpperPoint) {
         return cell
@@ -378,7 +377,7 @@ export default class treeObject {
 
     upperCellsIsField = upperCellsIsField.filter(cell => cell !== undefined)
     let generatedEnergy = 0
-    upperCellsIsField?.forEach(cell => generatedEnergy = generatedEnergy + cell.generatedEnergyByCell(fieldCells))
+    upperCellsIsField?.forEach(cell => generatedEnergy = generatedEnergy + cell.generatedEnergyByCell())
     // console.log('generatedEnergy', generatedEnergy);
 
     // console.log('upper cells', upperCellsIsField, upperCellsIsField.length);

@@ -4,7 +4,7 @@
     <div class="digital-tree__layout">
       <div>
         <CellsField
-          :fieldCells="fieldCells"
+          :field-cells="fieldCells"
           @clicked="displayCellParam"
         />
         <div
@@ -159,13 +159,12 @@ const filedBox = {
   },
   setup() {
     const logTextArray = ref([])
-    const fieldWidth = ref(7)
+    const fieldWidth = ref(15)
     const fieldHeight = ref(4)
     const digitalTrees = ref([])
     const treeCount = ref(3)
     const fieldCells = ref(new Array(fieldHeight.value).fill(0)
       .map(() => new Array(fieldWidth.value)))
-    const blockClass = ref('block')
 
     const timeRange = ref(1000)
 
@@ -201,10 +200,10 @@ const filedBox = {
       current > previous ? addRow() : deleteRow()
     })
 
-    console.log('Hi')
+    console.log('Hi here is start')
     createFieldObject()
     for (let treeCounter = 0; treeCounter < treeCount.value; treeCounter++) {
-      new treeObject(digitalTrees.value)
+      new treeObject(digitalTrees.value, fieldCells.value)
     }
 
     onMounted(() => {
@@ -220,7 +219,7 @@ const filedBox = {
           fieldCells.value[j][i] = new cellObject(
             i,
             j,
-            blockClass.value,
+            fieldCells.value,
           )
         }
       }
@@ -234,7 +233,6 @@ const filedBox = {
     function addFirstCellTrees() {
       for (const tree of digitalTrees.value) {
         tree.addFirstCell(
-          fieldCells.value,
           logTextArray.value,
         )
       }
@@ -278,7 +276,6 @@ const filedBox = {
     async function chooseActionAtAllTree() {
       for (const tree of digitalTrees.value) {
         await tree.chooseAction(
-          fieldCells.value,
           logTextArray.value,
         )
         // this.$forceUpdate()
@@ -345,7 +342,6 @@ const filedBox = {
       console.log('Added tree')
       new treeObject(digitalTrees.value)
       digitalTrees.value[digitalTrees.value.length - 1].addFirstCell(
-        fieldCells.value,
         logTextArray.value,
       )
       await pauseGame()
@@ -369,7 +365,7 @@ const filedBox = {
           new cellObject(
             fieldCells.value[j].length,
             j,
-            blockClass.value,
+            fieldCells.value,
           ),
         )
       }
@@ -388,7 +384,7 @@ const filedBox = {
           new cellObject(
             i,
             fieldCells.value.length - 1,
-            blockClass.value,
+            fieldCells.value,
           ),
         )
       }

@@ -1,7 +1,7 @@
 import { BASIC_COLOR } from "@/constant/basic"
 
 export default class cellObject {
-  constructor(i, j, blockClass) {
+  constructor(i, j, fieldCells) {
     this.i = i
     this.j = j
     this.id = `i${i}j${j}`
@@ -14,6 +14,7 @@ export default class cellObject {
     this.isCreateAnimation = true
     this.isCellAnimation = false
     this.isCellFalling = false
+    this.fieldCells = fieldCells
   }
 
   setColor(color) {
@@ -36,7 +37,7 @@ export default class cellObject {
     this.isCellFalling = false
   }
 
-  generatedEnergyByCell(fieldCells) {
-    return fieldCells.length - 1 - this.j
+  generatedEnergyByCell() {
+    return this.fieldCells.length - 1 - this.j
   }
 }
