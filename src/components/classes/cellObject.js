@@ -35,6 +35,9 @@ export default class cellObject {
     this.color = BASIC_COLOR
     this.indexInTree = null
     this.isCellFalling = false
+    this.parentTree = null
+    this.genome = 0
+    this.nextCell = null
   }
 
   generatedEnergyByCell() {

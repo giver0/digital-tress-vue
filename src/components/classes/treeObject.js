@@ -17,7 +17,7 @@ export default class treeObject {
     this.digitalTrees = digitalTrees
     digitalTrees.push(this)
     this.fieldCells = fieldCells
-    this.id = digitalTrees.length - 1
+    this.id = this.generateID()
     this.treeCounter = treeCounter
     this.treeCounter = this.treeCounter + 1
     this.cells = []
@@ -40,6 +40,17 @@ export default class treeObject {
       randomColor += Math.floor(Math.random() * 16777215).toString(16)
     }
     return randomColor
+  }
+
+  generateID() {
+    const length = 3
+    let result = ''
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+    const charactersLength = characters.length
+    for (let i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength))
+    }
+    return result
   }
 
   addFirstCell(logTextArray) {
@@ -406,7 +417,13 @@ export default class treeObject {
     const isEnergyOver = this.energy < 0
     if (isEnergyOver) {
       this.deleteTreeBody()
-      this.createTreeFromHeadCell()
+      if (this.cells.length > 1) {
+        this.createTreeFromHeadCell()
+      }
+      if (this.cells.length <= 1) {
+        this.deleteAllCells()
+      }
+      this.deleteEmptyTrees()
     }
   }
 
@@ -422,14 +439,25 @@ export default class treeObject {
       )
       newTree.addCellFromParent(cell)
     })
+  }
+
+  deleteAllCells() {
+    this.cells.forEach(cell => cell.setFieldType())
     this.cells = []
-    this.deleteEmptyTrees()
   }
 
   deleteEmptyTrees() {
-    const treeIndex = this.digitalTrees.findIndex(tree => tree.cells.length === 0)
-    if (treeIndex !== -1) {
-      this.digitalTrees.splice(treeIndex, 1)
-    }
+      const treeIndex = this.digitalTrees.findIndex(tree => tree.cells.length === 0)
+      if (treeIndex !== -1) {
+        this.digitalTrees.splice(treeIndex, 1)
+      }
+    // this.digitalTrees.forEach(tree => {
+    //   let treeIndex = this.digitalTrees.findIndex(tree => tree.cells.length === 0)
+    //   while (treeIndex !== -1) {
+    //     this.digitalTrees.splice(treeIndex, 1)
+    //   }
+    // }
+
+    // })
   }
 }
