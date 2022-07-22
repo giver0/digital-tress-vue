@@ -332,7 +332,6 @@ export default class treeObject {
         cell.setFieldType()
       }
     })
-    console.log('before filter');
     this.cells = this.cells.filter(cell => cell.color === this.headColor)
 
     this.cells.forEach(cell => cell.cellFalling())
@@ -428,9 +427,9 @@ export default class treeObject {
   }
 
   deleteEmptyTrees() {
-    const treeIndex = this.digitalTrees.findIndex(tree => tree.cells.length > 0)
-    if (treeIndex !== 1) {
-      this.digitalTrees.slice(treeIndex, 1)
+    const treeIndex = this.digitalTrees.findIndex(tree => tree.cells.length === 0)
+    if (treeIndex !== -1) {
+      this.digitalTrees.splice(treeIndex, 1)
     }
   }
 }
