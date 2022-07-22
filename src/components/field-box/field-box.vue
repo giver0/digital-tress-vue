@@ -9,35 +9,38 @@
         />
         <div
           v-if="displayCell.parentTree?.id"
+          class="tree-info"
         >
-          <div>
+          <div class="tree-info__item">
             type - {{displayCell.type}}
           </div>
-          <div>
+          <div class="tree-info__item">
             i - {{displayCell.i}}
           </div>
-          <div>
+          <div class="tree-info__item">
             j - {{displayCell.j}}
           </div>
-          <div>
+          <div class="tree-info__item">
             id - {{displayCell.id}}
           </div>
-          <div>
+          <div class="tree-info__item">
             color - {{displayCell.color}}
           </div>
-          <div>
+          <div class="tree-info__item">
             indexInTree - {{displayCell.indexInTree}}
           </div>
-          <div>
+          <div class="tree-info__item">
             isCellFalling - {{displayCell.isCellFalling}}
           </div>
-          <div>
+          <div class="tree-info__item">
             parentTree - {{displayCell.parentTree?.id}}
           </div>
-          <div>
+          <div class="tree-info__item">
             isFreeCellsAround - {{displayCell.parentTree?.isFreeCellsAround}}
           </div>
-
+          <div class="tree-info__item">
+            {{displayCell.parentTree?.genome}}
+          </div>
         </div>
       </div>
       <div class="digital-tree__control">
@@ -163,6 +166,7 @@ const filedBox = {
     const fieldHeight = ref(4)
     const digitalTrees = ref([])
     const treeCount = ref(3)
+    const treeCounter = ref(0)
     const fieldCells = ref(new Array(fieldHeight.value).fill(0)
       .map(() => new Array(fieldWidth.value)))
 
@@ -200,11 +204,15 @@ const filedBox = {
       current > previous ? addRow() : deleteRow()
     })
 
+    watch(() => digitalTrees.value, (current, previous) => {
+      if (current.length > previous.length) {
+        treeCounter.value = treeCounter.value + 1
+      }
+    }, { deep: true })
+
     console.log('Hi here is start')
     createFieldObject()
-    for (let treeCounter = 0; treeCounter < treeCount.value; treeCounter++) {
-      new treeObject(digitalTrees.value, fieldCells.value)
-    }
+    createFirstTrees()
 
     onMounted(() => {
       console.log('Hi Mounted')
@@ -222,6 +230,12 @@ const filedBox = {
             fieldCells.value,
           )
         }
+      }
+    }
+
+    function createFirstTrees() {
+      for (let treeIndex = 0; treeIndex < treeCount.value; treeIndex++) {
+        new treeObject(digitalTrees.value, fieldCells.value, treeCounter.value)
       }
     }
 
@@ -394,11 +408,11 @@ const filedBox = {
       fieldCells.value.pop()
     }
 
-    function displayCellParam(cell) {
-      console.log('display cell', cell);
-      // console.log(`display cell`, i, ' ', j, fieldCells.value[j][i]);
-      // displayCell.value = fieldCells.value[j][i]
-      displayCell.value = cell
+    function displayCellParam(i, j) {
+      console.log('display cell', i, j);
+      console.log(`display cell`, i, ' ', j, fieldCells.value[j][i]);
+      displayCell.value = fieldCells.value[j][i]
+      // displayCell.value = cell
     }
 
     return {

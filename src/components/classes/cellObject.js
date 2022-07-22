@@ -8,7 +8,7 @@ export default class cellObject {
     this.indexInTree = null
     this.type = 'field'
     this.color = BASIC_COLOR
-    this.genome = null
+    this.genome = 0
     this.nextCell = null
     this.parentTree = null
     this.isCreateAnimation = true
@@ -38,6 +38,18 @@ export default class cellObject {
   }
 
   generatedEnergyByCell() {
-    return this.fieldCells.length - 1 - this.j
+    if (!this.isCellFalling) {
+      return this.fieldCells.length - 1 - this.j
+    } else {
+      return 0
+    }
+  }
+
+  cellFalling() {
+    this.isCellFalling = true
+  }
+
+  cellIsNotFalling() {
+    this.isCellFalling = false
   }
 }

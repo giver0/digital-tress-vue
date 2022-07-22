@@ -6,24 +6,31 @@ import {
 } from "@/constant/basic"
 
 export default class treeObject {
-  constructor(digitalTrees, fieldCells) {
-    this.id = digitalTrees.length
+  constructor(
+    digitalTrees,
+    fieldCells,
+    treeCounter,
+    genome = this.gererateGenome(),
+    headColor = this.generateRandomColor(),
+    bodyColor = this.generateRandomColor(),
+  ) {
+    this.digitalTrees = digitalTrees
+    digitalTrees.push(this)
+    this.fieldCells = fieldCells
+    this.id = digitalTrees.length - 1
+    this.treeCounter = treeCounter
+    this.treeCounter = this.treeCounter + 1
     this.cells = []
     this.counterCell = 0
     this.counterCellAll = 0
     this.lastCell = null
-    this.headColor = null
-    this.bodyColor = null
     this.isFreeCellsAround = true
-    this.headColor = this.generateRandomColor()
-    this.bodyColor = this.generateRandomColor()
+    this.headColor = headColor
+    this.bodyColor = bodyColor
     this.positionCurrent = null
     this.positionNext = null
     this.energy = 20
-    this.genome = this.gererateGenome()
-    this.digitalTrees = digitalTrees
-    this.fieldCells = fieldCells
-    digitalTrees.push(this)
+    this.genome = genome
   }
 
   generateRandomColor() {
@@ -51,6 +58,15 @@ export default class treeObject {
       console.log('========== Some Error ==========')
       console.log(error)
     }
+  }
+
+  addCellFromParent(cell) {
+    this.cells.push(cell)
+    this.counterCell = 1
+    this.counterCellAll = 1
+    this.refreshLastCell()
+    this.lastCell.genome = 0
+    this.lastCell.parentTree = this
   }
 
   chooseRandomStartCell() {
@@ -113,7 +129,6 @@ export default class treeObject {
 
   chooseAction(logTextArray) {
     if (this.lastCell.isCellFalling) {
-      // this.moveCellDown(this.fieldCells)
       this.moveCellDown(logTextArray)
     } else {
       this.realiseGenome(logTextArray)
@@ -130,7 +145,7 @@ export default class treeObject {
         //   cellGenome[gen]
 
         // }
-        console.log('cellGenome', cellGenome);
+        // console.log('cellGenome', cellGenome);
         let newI = null
         let newJ = null
         if (cellGenome.upGen <= 15) {
@@ -312,15 +327,16 @@ export default class treeObject {
   deleteTreeBody() {
     // console.log('in delete body');
 
-    for (let index = 0; index < this.cells.length - 1; index++) {
-      this.cells[index].setFieldType()
-    }
-    // console.log(this.cells);
-    while (this.cells.length > 1) {
-      this.cells.shift()
-    }
-    // console.log(this.cells.length);
-    // console.log('cells', this.cells);
+    this.cells.forEach(cell => {
+      if (cell.color === this.bodyColor) {
+        cell.setFieldType()
+      }
+    })
+    console.log('before filter');
+    this.cells = this.cells.filter(cell => cell.color === this.headColor)
+
+    this.cells.forEach(cell => cell.cellFalling())
+
     this.counterCell = 1
   }
 
@@ -331,12 +347,13 @@ export default class treeObject {
       // console.log('At bottom');
       this.lastCell.isCellFalling = false
       this.lastCell.isFreeCellsAround = true
-      this.createCell(this.fieldCells, logTextArray)
+      this.realiseGenome(logTextArray)
     } else {
       // const nextJ = this.j + 1
       // console.log('need move');
       this.positionCurrent = this.lastCell
       this.positionNext = this.fieldCells[this.positionCurrent.j + 1][this.positionCurrent.i]
+      // console.log('positionNext', this.positionNext);
       const isBottomCellField = this.positionNext.type === TYPE_FIELD
       // console.log('isBottomCellField', isBottomCellField);
       if (isBottomCellField) {
@@ -382,5 +399,38 @@ export default class treeObject {
 
     // console.log('upper cells', upperCellsIsField, upperCellsIsField.length);
     this.energy = this.energy - this.cells.length + generatedEnergy
+
+    this.checkIsEnergyOver()
+  }
+
+  checkIsEnergyOver() {
+    const isEnergyOver = this.energy < 0
+    if (isEnergyOver) {
+      this.deleteTreeBody()
+      this.createTreeFromHeadCell()
+    }
+  }
+
+  createTreeFromHeadCell() {
+    this.cells.forEach(cell => {
+      const newTree = new treeObject(
+        this.digitalTrees,
+        this.fieldCells,
+        this.treeCounter,
+        this.genome,
+        this.headColor,
+        this.bodyColor,
+      )
+      newTree.addCellFromParent(cell)
+    })
+    this.cells = []
+    this.deleteEmptyTrees()
+  }
+
+  deleteEmptyTrees() {
+    const treeIndex = this.digitalTrees.findIndex(tree => tree.cells.length > 0)
+    if (treeIndex !== 1) {
+      this.digitalTrees.slice(treeIndex, 1)
+    }
   }
 }
