@@ -162,10 +162,10 @@ const filedBox = {
   },
   setup() {
     const logTextArray = ref([])
-    const fieldWidth = ref(15)
-    const fieldHeight = ref(4)
+    const fieldWidth = ref(20)
+    const fieldHeight = ref(8)
     const digitalTrees = ref([])
-    const treeCount = ref(3)
+    const treeCount = ref(5)
     const treeCounter = ref(0)
     const fieldCells = ref(new Array(fieldHeight.value).fill(0)
       .map(() => new Array(fieldWidth.value)))
@@ -270,7 +270,7 @@ const filedBox = {
         await sleep(timeRange.value)
         // console.log('======= new turn =======')
         chooseActionAtAllTree()
-        console.log('tree in main cycle', digitalTrees.value)
+        // console.log('tree in main cycle', digitalTrees.value)
         cycleCounter.value += 1
         if (isGamePaused.value) {
           isGamePausedAtMoment.value = true

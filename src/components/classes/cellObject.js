@@ -1,4 +1,8 @@
-import { BASIC_COLOR } from "@/constant/basic"
+import {
+  TYPE_CELL,
+  TYPE_FIELD,
+  BASIC_COLOR,
+} from "@/constant/basic"
 
 export default class cellObject {
   constructor(i, j, fieldCells) {
@@ -6,7 +10,7 @@ export default class cellObject {
     this.j = j
     this.id = `i${i}j${j}`
     this.indexInTree = null
-    this.type = 'field'
+    this.type = TYPE_FIELD
     this.color = BASIC_COLOR
     this.genome = 0
     this.nextCell = null
@@ -22,7 +26,7 @@ export default class cellObject {
   }
 
   setCellType() {
-    this.type = 'cell'
+    this.type = TYPE_CELL
     this.isCreateAnimation = false
     this.isCellAnimation = true
   }
@@ -31,7 +35,7 @@ export default class cellObject {
     this.isCreateAnimation = false
     this.isCreateAnimation = true
     this.isCellAnimation = false
-    this.type = 'field'
+    this.type = TYPE_FIELD
     this.color = BASIC_COLOR
     this.indexInTree = null
     this.isCellFalling = false
@@ -41,10 +45,31 @@ export default class cellObject {
   }
 
   generatedEnergyByCell() {
-    if (!this.isCellFalling) {
-      return this.fieldCells.length - 1 - this.j
-    } else {
+    const countCellAbove = 2
+
+    if (this.isCellFalling) {
       return 0
+    } else {
+      const isCellAtUpperPoint = this.j === 0
+      if (isCellAtUpperPoint) {
+        return 3
+      }
+      let cellGeneratedEnergy = 0
+      for (let index = 1; index < countCellAbove + 1; index++) {
+        const jForCheck = this.j - index
+        const isCellExist = jForCheck in this.fieldCells && this.i in this.fieldCells[jForCheck]
+        if (isCellExist) {
+          const isUpperCellField = this.fieldCells[jForCheck][this.i]?.type === TYPE_FIELD
+          if (isUpperCellField) {
+            cellGeneratedEnergy = cellGeneratedEnergy + 1
+          } else {
+            return cellGeneratedEnergy
+          }
+        } else {
+          return 3
+        }
+      }
+      return cellGeneratedEnergy
     }
   }
 

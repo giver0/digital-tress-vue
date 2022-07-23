@@ -390,27 +390,19 @@ export default class treeObject {
   }
 
   refreshEnergy() {
-    let upperCellsIsField = this.cells.map(cell => {
-      const isCellAtUpperPoint = cell.j === 0
-      if (isCellAtUpperPoint) {
-        return cell
-      }
-      const isUpperCellField = this.fieldCells[cell.j - 1][cell.i]?.type === TYPE_FIELD
-
-      if (isUpperCellField || isCellAtUpperPoint) {
-        return cell
-      }
-    })
-
-    upperCellsIsField = upperCellsIsField.filter(cell => cell !== undefined)
-    let generatedEnergy = 0
-    upperCellsIsField?.forEach(cell => generatedEnergy = generatedEnergy + cell.generatedEnergyByCell())
-    // console.log('generatedEnergy', generatedEnergy);
-
-    // console.log('upper cells', upperCellsIsField, upperCellsIsField.length);
-    this.energy = this.energy - this.cells.length + generatedEnergy
-
+    this.increaseEnergy()
+    this.reduceEnergy()
     this.checkIsEnergyOver()
+  }
+
+  increaseEnergy() {
+    this.cells.forEach(cell => {
+      this.energy = this.energy + cell.generatedEnergyByCell()
+    })
+  }
+
+  reduceEnergy() {
+    this.energy = this.energy - this.cells.length
   }
 
   checkIsEnergyOver() {

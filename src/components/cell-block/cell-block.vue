@@ -15,7 +15,8 @@
       <!-- {{cellObject.id}} -->
       <!-- {{cellObject.parentTree.id}}-{{cellObject.indexInTree}} -->
       <!-- {{cellObject.j}}-{{cellObject.i}} id{{cellObject.parentTree.id}} -->
-      {{cellObject.genome}} id:{{cellObject.parentTree.id}}
+
+      <!-- {{cellObject.j}}-{{cellObject.i}} id:{{cellObject.parentTree.id}} -->
 
     </p>
   </div>
