@@ -12,55 +12,57 @@
           class="tree-info"
         >
           <div class="tree-info__item">
-            type - {{displayCell.type}}
+            type - {{ displayCell.type }}
           </div>
           <div class="tree-info__item">
-            i - {{displayCell.i}}
+            i - {{ displayCell.i }}
           </div>
           <div class="tree-info__item">
-            j - {{displayCell.j}}
+            j - {{ displayCell.j }}
           </div>
           <div class="tree-info__item">
-            id - {{displayCell.id}}
+            id - {{ displayCell.id }}
           </div>
           <div class="tree-info__item">
-            color - {{displayCell.color}}
+            color - {{ displayCell.color }}
           </div>
           <div class="tree-info__item">
-            indexInTree - {{displayCell.indexInTree}}
+            indexInTree - {{ displayCell.indexInTree }}
           </div>
           <div class="tree-info__item">
-            isCellFalling - {{displayCell.isCellFalling}}
+            isCellFalling - {{ displayCell.isCellFalling }}
           </div>
           <div class="tree-info__item">
-            parentTree - {{displayCell.parentTree?.id}}
+            parentTree - {{ displayCell.parentTree?.id }}
           </div>
           <div class="tree-info__item">
-            isFreeCellsAround - {{displayCell.parentTree?.isFreeCellsAround}}
+            isFreeCellsAround - {{ displayCell.parentTree?.isFreeCellsAround }}
           </div>
           <div class="tree-info__item">
-            {{displayCell.parentTree?.genome}}
+            {{ displayCell.parentTree?.genome }}
           </div>
         </div>
       </div>
       <div class="digital-tree__control">
         <ControlButton
-          @onPauseGame = "pauseGame"
-          :isGamePaused = "isGamePaused"
-          :isCanChangeColor = "isCanChangeColor"
-          @onChangeColor = "ChangeColor"
+          :is-game-paused="isGamePaused"
+          :is-can-change-color="isCanChangeColor"
+          @onPauseGame="pauseGame"
+          @onChangeColor="ChangeColor"
         />
         <div class="digital-tree__counter">
           <CycleCounter
-            :cycleCounter="cycleCounter"
-            :fullCycleCounter="fullCycleCounter"
+            :cycle-counter="cycleCounter"
+            :full-cycle-counter="fullCycleCounter"
           />
           <div class="digital-tree__counter-box">
-            <div class="digital-tree__counter-text">Delay (ms) </div>
+            <div class="digital-tree__counter-text">
+              Delay (ms)
+            </div>
             <input
-              type="number"
               id="counter-speed"
               v-model="timeRange"
+              type="number"
               placeholder="Speed"
               name="quantity"
               step="10"
@@ -70,11 +72,13 @@
             >
           </div>
           <div class="digital-tree__counter-box">
-            <div class="digital-tree__counter-text" >Tree count</div>
+            <div class="digital-tree__counter-text">
+              Tree count
+            </div>
             <input
-              type="number"
               id="counter-tree"
               v-model="treeCount"
+              type="number"
               placeholder="Tree count"
               name="quantity"
               step="1"
@@ -84,11 +88,13 @@
             >
           </div>
           <div class="digital-tree__counter-box">
-            <div class="digital-tree__counter-text">Column</div>
+            <div class="digital-tree__counter-text">
+              Column
+            </div>
             <input
-              type="number"
               id="counter-tree"
               v-model="fieldWidth"
+              type="number"
               placeholder="Tree count"
               name="quantity"
               step="1"
@@ -97,11 +103,13 @@
             >
           </div>
           <div class="digital-tree__counter-box">
-            <div class="digital-tree__counter-text">Raw</div>
+            <div class="digital-tree__counter-text">
+              Raw
+            </div>
             <input
-              type="number"
               id="counter-field-size-raw"
               v-model="fieldHeight"
+              type="number"
               placeholder="Tree count"
               name="quantity"
               step="1"
@@ -110,9 +118,13 @@
             >
           </div>
         </div>
-        <div class="digital-tree__counter-trees-cell-boxs" id="counter-trees-cell">
+        <div
+          id="counter-trees-cell"
+          class="digital-tree__counter-trees-cell-boxs"
+        >
           <CellCounter
-            v-for="tree in digitalTrees" :key="tree.id"
+            v-for="tree in digitalTrees"
+            :key="tree.id"
             :tree="tree"
           />
         </div>
@@ -289,13 +301,6 @@ const filedBox = {
       }
     }
 
-    function fallDownCells() {
-      for (const tree of digitalTrees.value) {
-        if (tree.lastCell.isCellFalling) {
-        }
-      }
-    }
-
     function logNewFullCycle() {
       logTextArray.value.push('========= New cycle =========')
     }
@@ -402,8 +407,8 @@ const filedBox = {
     }
 
     function displayCellParam(i, j) {
-      console.log('display cell', i, j);
-      console.log(`display cell`, i, ' ', j, fieldCells.value[j][i]);
+      console.log('display cell', i, j)
+      console.log(`display cell`, i, ' ', j, fieldCells.value[j][i])
       displayCell.value = fieldCells.value[j][i]
       // displayCell.value = cell
     }

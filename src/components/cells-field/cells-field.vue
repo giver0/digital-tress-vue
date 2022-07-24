@@ -11,7 +11,7 @@
         class="testArray"
       >
         <CellBlock
-          :cellObject="cell"
+          :cell-object="cell"
           @click="$emit('clicked', cell.i, cell.j)"
         />
       </div>

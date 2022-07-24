@@ -3,7 +3,7 @@ import {
   BASIC_COLOR,
   GENOME_COUNT,
   GENOME_MAX_VALUE,
-} from "@/constant/basic"
+} from '@/constant/basic'
 
 export default class treeObject {
   constructor(
@@ -127,7 +127,7 @@ export default class treeObject {
         rightGen: this.getRandomInt(0, GENOME_MAX_VALUE),
       }
     })
-    console.log('genome', genome);
+    console.log('genome', genome)
     return genome
   }
 

@@ -4,7 +4,10 @@
       <div class="digital-tree__counter-title">
         All cycle
       </div>
-      <div class="digital-tree__counter-count" id="counter-count">
+      <div
+        id="counter-count"
+        class="digital-tree__counter-count"
+      >
         {{ cycleCounter }}
       </div>
     </div>
@@ -12,7 +15,10 @@
       <div class="digital-tree__counter-title">
         Full cycle
       </div>
-      <div class="digital-tree__counter-count" id="counter-fullCircle-count">
+      <div
+        id="counter-fullCircle-count"
+        class="digital-tree__counter-count"
+      >
         {{ fullCycleCounter }}
       </div>
     </div>

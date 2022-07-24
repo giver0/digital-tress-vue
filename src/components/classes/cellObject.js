@@ -2,7 +2,7 @@ import {
   TYPE_CELL,
   TYPE_FIELD,
   BASIC_COLOR,
-} from "@/constant/basic"
+} from '@/constant/basic'
 
 export default class cellObject {
   constructor(i, j, fieldCells) {

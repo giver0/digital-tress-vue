@@ -10,8 +10,7 @@
     <div class="digital-tree__header-text">
       Digital Trees
     </div>
-    <div>
-    </div>
+    <div />
   </div>
 </template>
 

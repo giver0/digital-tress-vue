@@ -1,10 +1,11 @@
 <template>
-  <div :class="{
-         block: true,
-         create_block_animation: cellObject.isCreateAnimation,
-         change_size_animation: cellObject.isCellAnimation
-       }"
-       :style="{background: cellObject.color}"
+  <div
+    :class="{
+      block: true,
+      create_block_animation: cellObject.isCreateAnimation,
+      change_size_animation: cellObject.isCellAnimation
+    }"
+    :style="{background: cellObject.color}"
   >
     <p
       v-if="cellObject.type==='cell'"
@@ -17,7 +18,6 @@
       <!-- {{cellObject.j}}-{{cellObject.i}} id{{cellObject.parentTree.id}} -->
 
       <!-- {{cellObject.j}}-{{cellObject.i}} id:{{cellObject.parentTree.id}} -->
-
     </p>
   </div>
 </template>

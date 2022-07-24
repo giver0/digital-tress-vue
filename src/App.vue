@@ -1,5 +1,5 @@
 <template>
-  <fieldBox/>
+  <fieldBox />
 </template>
 
 <script>

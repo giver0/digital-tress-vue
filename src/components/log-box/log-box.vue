@@ -3,7 +3,10 @@
     <!-- <div class="digital-tree__field-left-title">
       Logbox
     </div> -->
-    <div class="digital-tree__logbox-title digital-tree__log-box-border" style="border-style: solid">
+    <div
+      class="digital-tree__logbox-title digital-tree__log-box-border"
+      style="border-style: solid"
+    >
       <div
         class="digital-tree__field-left-logbox-text"
         style="border: none"
@@ -19,7 +22,6 @@
           style="width: 48px"
         >
           Tree
-
         </div>
         <div
           class="digital-tree__field-left-logbox-td"
@@ -35,7 +37,10 @@
         </div>
       </div>
     </div>
-    <div class="digital-tree__field-left-logbox " id="logbox">
+    <div
+      id="logbox"
+      class="digital-tree__field-left-logbox "
+    >
       <div
         v-for="(log, index) in logBoxArray.slice().reverse()"
         :key="index"
@@ -52,19 +57,19 @@
             class="digital-tree__field-left-logbox-td"
             :style="{color: log.bodyColor, width: 48+'px'}"
           >
-            {{log.id}}
+            {{ log.id }}
           </td>
           <td
             class="digital-tree__field-left-logbox-td"
             :style="{color: log.bodyColor, width: 48+'px'}"
           >
-            {{log.i}}
+            {{ log.i }}
           </td>
           <td
             class="digital-tree__field-left-logbox-td"
             :style="{color: log.bodyColor, width: 48+'px'}"
           >
-            {{log.j}}
+            {{ log.j }}
           </td>
         </tr>
         <!-- {{log}} -->
@@ -80,6 +85,7 @@ export default {
   props: {
     logBoxArray: {
       type: Array,
+      default: () => [],
       scrollToBottom() {
         console.log('Hello')
       },

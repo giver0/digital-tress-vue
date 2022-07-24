@@ -3,8 +3,7 @@
     <div
       class="block-counter-head"
       :style="{background: tree.headColor}"
-    >
-    </div>
+    />
     <div
       class="block-counter"
       :style="{background: tree.bodyColor}"
@@ -14,7 +13,7 @@
         :style="{color: tree.bodyColor}"
       >
         <!-- :style="{color: tree.color}" -->
-        Energ:{{tree.energy}}, Cells: {{tree.cells.length}}
+        Energ:{{ tree.energy }}, Cells: {{ tree.cells.length }}
       </p>
     </div>
   </div>
