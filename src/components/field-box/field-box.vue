@@ -93,7 +93,7 @@
               name="quantity"
               step="1"
               min="1"
-              max="20"
+              max="40"
               class="counter-text-input"
             >
           </div>
@@ -107,20 +107,20 @@
               name="quantity"
               step="1"
               min="1"
-              max="20"
+              max="40"
               class="counter-text-input"
             >
           </div>
         </div>
-        <div class="digital-tree__counter-trees-cell-boxs" id="counter-trees-cell">
+        <!-- <div class="digital-tree__counter-trees-cell-boxs" id="counter-trees-cell">
           <CellCounter
             v-for="tree in digitalTrees" :key="tree.id"
             :tree="tree"
           />
-        </div>
-        <LogBox
+        </div> -->
+        <!-- <LogBox
           :logBoxArray = "logTextArray"
-        />
+        /> -->
       </div>
     </div>
     <!-- <div>
@@ -162,15 +162,14 @@ const filedBox = {
   },
   setup() {
     const logTextArray = ref([])
-    const fieldWidth = ref(20)
-    const fieldHeight = ref(8)
+    const fieldWidth = ref(30)
+    const fieldHeight = ref(10)
     const digitalTrees = ref([])
     const treeCount = ref(5)
-    const treeCounter = ref(0)
     const fieldCells = ref(new Array(fieldHeight.value).fill(0)
       .map(() => new Array(fieldWidth.value)))
 
-    const timeRange = ref(1000)
+    const timeRange = ref(0)
 
     const cycleCounter = ref(0)
     const fullCycleCounter = ref(0)
@@ -204,12 +203,6 @@ const filedBox = {
       current > previous ? addRow() : deleteRow()
     })
 
-    watch(() => digitalTrees.value, (current, previous) => {
-      if (current.length > previous.length) {
-        treeCounter.value = treeCounter.value + 1
-      }
-    }, { deep: true })
-
     console.log('Hi here is start')
     createFieldObject()
     createFirstTrees()
@@ -235,7 +228,7 @@ const filedBox = {
 
     function createFirstTrees() {
       for (let treeIndex = 0; treeIndex < treeCount.value; treeIndex++) {
-        new treeObject(digitalTrees.value, fieldCells.value, treeCounter.value)
+        new treeObject(digitalTrees.value, fieldCells.value)
       }
     }
 
@@ -267,6 +260,7 @@ const filedBox = {
 
     async function cycle() {
       while (isAnyTreesCanMove.value) {
+        console.time('startCycle')
         await sleep(timeRange.value)
         // console.log('======= new turn =======')
         chooseActionAtAllTree()
@@ -276,6 +270,7 @@ const filedBox = {
           isGamePausedAtMoment.value = true
           return
         }
+        console.timeEnd('startCycle')
       }
       fullCycleCounter.value += 1
       logNewFullCycle()

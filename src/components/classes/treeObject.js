@@ -9,7 +9,6 @@ export default class treeObject {
   constructor(
     digitalTrees,
     fieldCells,
-    treeCounter,
     genome = this.gererateGenome(),
     headColor = this.generateRandomColor(),
     bodyColor = this.generateRandomColor(),
@@ -18,8 +17,6 @@ export default class treeObject {
     digitalTrees.push(this)
     this.fieldCells = fieldCells
     this.id = this.generateID()
-    this.treeCounter = treeCounter
-    this.treeCounter = this.treeCounter + 1
     this.cells = []
     this.counterCell = 0
     this.counterCellAll = 0
@@ -140,12 +137,18 @@ export default class treeObject {
 
   chooseAction(logTextArray) {
     if (this.lastCell.isCellFalling) {
+      // console.time('moveCellDown')
       this.moveCellDown(logTextArray)
+      // console.timeEnd('moveCellDown')
     } else {
+      // console.time('realiseGenome')
       this.realiseGenome(logTextArray)
       // this.createCell(logTextArray)
+      // console.timeEnd('realiseGenome')
     }
+    console.time('refreshEnergy')
     this.refreshEnergy()
+    console.timeEnd('refreshEnergy')
   }
 
   realiseGenome(logTextArray) {
@@ -390,14 +393,23 @@ export default class treeObject {
   }
 
   refreshEnergy() {
+    console.time('increaseEnergy')
     this.increaseEnergy()
+    console.timeEnd('increaseEnergy')
+    console.time('reduceEnergy')
     this.reduceEnergy()
+    console.timeEnd('reduceEnergy')
+    console.time('checkIsEnergyOver')
     this.checkIsEnergyOver()
+    console.timeEnd('checkIsEnergyOver')
   }
 
   increaseEnergy() {
     this.cells.forEach(cell => {
-      this.energy = this.energy + cell.generatedEnergyByCell()
+      const generatedEnergyByCell = cell.generatedEnergyByCell()
+      if (generatedEnergyByCell) {
+        this.energy = this.energy + cell.generatedEnergyByCell()
+      }
     })
   }
 
@@ -424,7 +436,6 @@ export default class treeObject {
       const newTree = new treeObject(
         this.digitalTrees,
         this.fieldCells,
-        this.treeCounter,
         this.genome,
         this.headColor,
         this.bodyColor,

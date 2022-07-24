@@ -63,9 +63,11 @@ export default class cellObject {
           if (isUpperCellField) {
             cellGeneratedEnergy = cellGeneratedEnergy + 1
           } else {
+            index = countCellAbove + 1
             return cellGeneratedEnergy
           }
         } else {
+          index = countCellAbove + 1
           return 3
         }
       }
