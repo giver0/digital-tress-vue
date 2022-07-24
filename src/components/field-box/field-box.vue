@@ -200,6 +200,15 @@ const filedBox = {
       return true
     })
 
+    const sortedDigitalTrees = computed(() => {
+      if (digitalTrees.value.length < 1) {
+        return digitalTrees.value
+      }
+      return digitalTrees.value.sort((a, b) => {
+        return a.cells.length - b.cells.length
+      })
+    })
+
     watch(() => treeCount.value, async (current, previous) => {
       isGamePaused.value = true
       current > previous ? await addTree() : await deleteTree()
@@ -420,6 +429,7 @@ const filedBox = {
       isGamePaused,
       isCanChangeColor,
       fullCycleCounter,
+      sortedDigitalTrees,
       pauseGame,
       ChangeColor,
       displayCellParam,
