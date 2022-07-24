@@ -146,9 +146,9 @@ export default class treeObject {
       // this.createCell(logTextArray)
       // console.timeEnd('realiseGenome')
     }
-    console.time('refreshEnergy')
+    // console.time('refreshEnergy')
     this.refreshEnergy()
-    console.timeEnd('refreshEnergy')
+    // console.timeEnd('refreshEnergy')
   }
 
   realiseGenome(logTextArray) {
@@ -322,7 +322,7 @@ export default class treeObject {
       bodyColor: this.bodyColor,
     }
     logTextArray.push(logObject)
-    if (logTextArray.length > 100) {
+    if (logTextArray.length > 50) {
       logTextArray.shift()
     }
   }
@@ -393,15 +393,15 @@ export default class treeObject {
   }
 
   refreshEnergy() {
-    console.time('increaseEnergy')
+    // console.time('increaseEnergy')
     this.increaseEnergy()
-    console.timeEnd('increaseEnergy')
-    console.time('reduceEnergy')
+    // console.timeEnd('increaseEnergy')
+    // console.time('reduceEnergy')
     this.reduceEnergy()
-    console.timeEnd('reduceEnergy')
-    console.time('checkIsEnergyOver')
+    // console.timeEnd('reduceEnergy')
+    // console.time('checkIsEnergyOver')
     this.checkIsEnergyOver()
-    console.timeEnd('checkIsEnergyOver')
+    // console.timeEnd('checkIsEnergyOver')
   }
 
   increaseEnergy() {

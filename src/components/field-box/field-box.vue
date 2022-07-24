@@ -112,12 +112,12 @@
             >
           </div>
         </div>
-        <!-- <div class="digital-tree__counter-trees-cell-boxs" id="counter-trees-cell">
+        <div class="digital-tree__counter-trees-cell-boxs" id="counter-trees-cell">
           <CellCounter
             v-for="tree in digitalTrees" :key="tree.id"
             :tree="tree"
           />
-        </div> -->
+        </div>
         <!-- <LogBox
           :logBoxArray = "logTextArray"
         /> -->
