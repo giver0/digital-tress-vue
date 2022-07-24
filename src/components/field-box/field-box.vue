@@ -238,7 +238,7 @@ const filedBox = {
 
     function createFirstTrees() {
       for (let treeIndex = 0; treeIndex < treeCount.value; treeIndex++) {
-        new treeObject(digitalTrees.value, fieldCells.value)
+        new treeObject(digitalTrees.value, fieldCells.value, logTextArray.value,)
       }
     }
 
@@ -249,9 +249,7 @@ const filedBox = {
 
     function addFirstCellTrees() {
       for (const tree of digitalTrees.value) {
-        tree.addFirstCell(
-          logTextArray.value,
-        )
+        tree.addFirstCell()
       }
     }
 
@@ -294,9 +292,7 @@ const filedBox = {
 
     async function chooseActionAtAllTree() {
       for (const tree of digitalTrees.value) {
-        await tree.chooseAction(
-          logTextArray.value,
-        )
+        await tree.chooseAction()
         // this.$forceUpdate()
       }
     }
@@ -352,10 +348,8 @@ const filedBox = {
         await sleep(200)
       }
       console.log('Added tree')
-      new treeObject(digitalTrees.value)
-      digitalTrees.value[digitalTrees.value.length - 1].addFirstCell(
-        logTextArray.value,
-      )
+      new treeObject(digitalTrees.value, fieldCells.value, logTextArray.value,)
+      digitalTrees.value[digitalTrees.value.length - 1].addFirstCell()
       await pauseGame()
     }
 

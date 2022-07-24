@@ -9,6 +9,7 @@ export default class treeObject {
   constructor(
     digitalTrees,
     fieldCells,
+    logTextArray,
     genome = this.gererateGenome(),
     headColor = this.generateRandomColor(),
     bodyColor = this.generateRandomColor(),
@@ -16,6 +17,7 @@ export default class treeObject {
     this.digitalTrees = digitalTrees
     digitalTrees.push(this)
     this.fieldCells = fieldCells
+    this.logTextArray = logTextArray
     this.id = this.generateID()
     this.cells = []
     this.counterCell = 0
@@ -50,7 +52,7 @@ export default class treeObject {
     return result
   }
 
-  addFirstCell(logTextArray) {
+  addFirstCell() {
     try {
       const firstCell = this.randomCellFloor()
       this.cells.push(firstCell)
@@ -61,7 +63,7 @@ export default class treeObject {
       this.cells[0].indexInTree = this.cells.length - 1
       this.cells[0].genome = 0
       this.refreshLastCell()
-      this.createCellLog(logTextArray)
+      this.createCellLog()
     } catch (error) {
       console.log('========== Some Error ==========')
       console.log(error)
@@ -135,15 +137,15 @@ export default class treeObject {
     this.lastCell = this.cells[this.cells.length - 1]
   }
 
-  chooseAction(logTextArray) {
+  chooseAction() {
     if (this.lastCell.isCellFalling) {
       // console.time('moveCellDown')
-      this.moveCellDown(logTextArray)
+      this.moveCellDown()
       // console.timeEnd('moveCellDown')
     } else {
       // console.time('realiseGenome')
-      this.realiseGenome(logTextArray)
-      // this.createCell(logTextArray)
+      this.realiseGenome()
+      // this.createCell()
       // console.timeEnd('realiseGenome')
     }
     // console.time('refreshEnergy')
@@ -151,7 +153,7 @@ export default class treeObject {
     // console.timeEnd('refreshEnergy')
   }
 
-  realiseGenome(logTextArray) {
+  realiseGenome() {
     this.cells.forEach(cell => {
       if (cell.color === this.headColor) {
         const cellGenome = this.genome[cell.genome]
@@ -166,35 +168,35 @@ export default class treeObject {
           newI = cell.i
           newJ = cell.j - 1
           if (this.isNextCellField(newI, newJ)) {
-            this.createCellGenome(cell, logTextArray, newI, newJ, cellGenome.upGen)
+            this.createCellGenome(cell, newI, newJ, cellGenome.upGen)
           }
         }
         if (cellGenome.downGen <= 15) {
           newI = cell.i
           newJ = cell.j + 1
           if (this.isNextCellField(newI, newJ)) {
-            this.createCellGenome(cell, logTextArray, newI, newJ, cellGenome.downGen)
+            this.createCellGenome(cell, newI, newJ, cellGenome.downGen)
           }
         }
         if (cellGenome.leftGen <= 15) {
           newI = cell.i - 1
           newJ = cell.j
           if (this.isNextCellField(newI, newJ)) {
-            this.createCellGenome(cell, logTextArray, newI, newJ, cellGenome.leftGen)
+            this.createCellGenome(cell, newI, newJ, cellGenome.leftGen)
           }
         }
         if (cellGenome.rightGen <= 15) {
           newI = cell.i + 1
           newJ = cell.j
           if (this.isNextCellField(newI, newJ)) {
-            this.createCellGenome(cell, logTextArray, newI, newJ, cellGenome.rightGen)
+            this.createCellGenome(cell, newI, newJ, cellGenome.rightGen)
           }
         }
       }
     })
   }
 
-  createCellGenome(cell, logTextArray, newI, newJ, genomeToImplement) {
+  createCellGenome(cell, newI, newJ, genomeToImplement) {
     // console.log(`next i and j`, i, j);
     cell.setColor(this.bodyColor)
     const nextCell = this.fieldCells[newJ][newI]
@@ -208,7 +210,7 @@ export default class treeObject {
     nextCell.parentTree = this
     this.cells.push(nextCell)
     this.refreshLastCell()
-    this.createCellLog(logTextArray)
+    this.createCellLog()
   }
 
   isNextCellField(newI, newJ) {
@@ -219,7 +221,7 @@ export default class treeObject {
     }
   }
 
-  createCell(logTextArray) {
+  createCell() {
     const freeCellsArray = this.FreeCellsAround2(
       this.lastCell,
     )
@@ -234,7 +236,7 @@ export default class treeObject {
     } else {
       const FreeCellCoordinate = this.chooseRandomPoint(freeCellsArray)
       const [j, i] = FreeCellCoordinate
-      this.addNextCell(j, i, logTextArray)
+      this.addNextCell(j, i)
     }
   }
 
@@ -294,7 +296,7 @@ export default class treeObject {
     return freeCells[randomValue]
   }
 
-  addNextCell(j, i, logTextArray) {
+  addNextCell(j, i) {
     // console.log(`next i and j`, i, j);
     this.lastCell.setColor(this.bodyColor)
     const nextCell = this.fieldCells[j][i]
@@ -308,10 +310,10 @@ export default class treeObject {
     this.cells.push(nextCell)
     this.refreshLastCell()
     // this.nextCell = nextCell
-    this.createCellLog(logTextArray)
+    this.createCellLog()
   }
 
-  createCellLog(logTextArray) {
+  createCellLog() {
     // let logText = "Create cell column:" + this.lastCell.i + ", raw:" + this.lastCell.j +", TreeID: "+this.id
     const logObject = {
       i: this.lastCell.i,
@@ -321,9 +323,9 @@ export default class treeObject {
       headColor: this.headColor,
       bodyColor: this.bodyColor,
     }
-    logTextArray.push(logObject)
-    if (logTextArray.length > 50) {
-      logTextArray.shift()
+    this.logTextArray.push(logObject)
+    if (this.logTextArray.length > 50) {
+      this.logTextArray.shift()
     }
   }
 
@@ -353,14 +355,14 @@ export default class treeObject {
     this.counterCell = 1
   }
 
-  moveCellDown(logTextArray) {
+  moveCellDown() {
     // console.log('i:', this.i, 'j:', this.j, 'Tree id:', this.parentTree);
     // console.log('field move', this.fieldCells[this.j][this.i]);
     if (this.lastCell.j === this.fieldCells.length - 1) {
       // console.log('At bottom');
       this.lastCell.isCellFalling = false
       this.lastCell.isFreeCellsAround = true
-      this.realiseGenome(logTextArray)
+      this.realiseGenome()
     } else {
       // const nextJ = this.j + 1
       // console.log('need move');
@@ -436,6 +438,7 @@ export default class treeObject {
       const newTree = new treeObject(
         this.digitalTrees,
         this.fieldCells,
+        this.logTextArray,
         this.genome,
         this.headColor,
         this.bodyColor,
