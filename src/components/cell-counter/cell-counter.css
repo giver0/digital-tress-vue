@@ -9,8 +9,8 @@
 }
 
 .block-counter {
-  width: 48px;
-  height: 48px;
+  width: 200px;
+  height: 24px;
   background: gray;
   display: flex;
   justify-content: center;
@@ -21,7 +21,7 @@
 
 .block-counter-head{
   width: 16px;
-  height: 48px;
+  height: 24px;
   background: red;
 }
 

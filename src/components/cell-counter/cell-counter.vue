@@ -14,8 +14,7 @@
         :style="{color: tree.bodyColor}"
       >
         <!-- :style="{color: tree.color}" -->
-        Energ.
-        {{tree.energy}}
+        Energ:{{tree.energy}}, Cells: {{tree.cells.length}}
       </p>
     </div>
   </div>
