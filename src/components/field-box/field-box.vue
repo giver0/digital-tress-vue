@@ -238,7 +238,7 @@ const filedBox = {
 
     function createFirstTrees() {
       for (let treeIndex = 0; treeIndex < treeCount.value; treeIndex++) {
-        new treeObject(digitalTrees.value, fieldCells.value, logTextArray.value,)
+        new treeObject(digitalTrees.value, fieldCells.value, logTextArray.value)
       }
     }
 
@@ -348,7 +348,7 @@ const filedBox = {
         await sleep(200)
       }
       console.log('Added tree')
-      new treeObject(digitalTrees.value, fieldCells.value, logTextArray.value,)
+      new treeObject(digitalTrees.value, fieldCells.value, logTextArray.value)
       digitalTrees.value[digitalTrees.value.length - 1].addFirstCell()
       await pauseGame()
     }
