@@ -9,7 +9,7 @@
 }
 
 .block-counter {
-  width: 200px;
+  width: 180px;
   height: 24px;
   background: gray;
   display: flex;
@@ -20,9 +20,14 @@
 }
 
 .block-counter-head{
-  width: 16px;
+  width: 40px;
   height: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   background: red;
+  padding-left: 5px;
+
 }
 
 .cellText{

@@ -123,9 +123,13 @@
           class="digital-tree__counter-trees-cell-boxs"
         >
           <CellCounter
-            v-for="tree in digitalTrees"
+            v-for="(tree, index) in digitalTrees"
             :key="tree.id"
-            :tree="tree"
+            :head-color="tree.headColor"
+            :body-color="tree.bodyColor"
+            :energy="tree.energy"
+            :cell-length="tree?.cells?.length"
+            :index="index"
           />
         </div>
         <!-- <LogBox
