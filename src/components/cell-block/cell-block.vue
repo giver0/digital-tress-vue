@@ -2,15 +2,15 @@
   <div
     :class="{
       block: true,
-      create_block_animation: cellObject.isCreateAnimation,
-      change_size_animation: cellObject.isCellAnimation
+      create_block_animation: cellIsCreateAnimation,
+      change_size_animation: cellIsCellAnimation
     }"
-    :style="{background: cellObject.color}"
+    :style="{background: cellColor}"
   >
     <p
-      v-if="cellObject.type==='cell'"
+      v-if="cellType==='cell'"
       :class="{cellText: true, }"
-      :style="{color: cellObject.color}"
+      :style="{color: cellColor}"
     >
       <!-- {{cellObject.id}} -->
       <!-- {{cellObject.id}} -->
@@ -29,8 +29,21 @@ import { ref, computed } from 'vue'
 export default {
   name: 'CellObject',
   props: {
-    cellObject: {
-      type: Object,
+    cellColor: {
+      type: String,
+      default: '#000000',
+    },
+    cellType: {
+      type: String,
+      default: '',
+    },
+    cellIsCreateAnimation: {
+      type: Boolean,
+      default: false,
+    },
+    cellIsCellAnimation: {
+      type: Boolean,
+      default: false,
     },
   },
 
@@ -38,8 +51,8 @@ export default {
     const isField = ref('false')
     const isCell = ref('false')
 
-    isField.value = computed(() => props.cellObject.type === 'field')
-    isCell.value = computed(() => props.cellObject.type === 'cell')
+    isField.value = computed(() => props.cellType === 'field')
+    isCell.value = computed(() => props.cellType === 'cell')
 
     return {
       isField,

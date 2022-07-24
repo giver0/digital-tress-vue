@@ -11,7 +11,10 @@
         class="testArray"
       >
         <CellBlock
-          :cell-object="cell"
+          :cell-color="cell.color"
+          :cell-type="cell.type"
+          :cell-is-create-animation="cell?.isCreateAnimation"
+          :cell-is-cell-animation="cell?.isCellAnimation"
           @click="$emit('clicked', cell.i, cell.j)"
         />
       </div>

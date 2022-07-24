@@ -183,7 +183,7 @@ const filedBox = {
     const fieldCells = ref(new Array(fieldHeight.value).fill(0)
       .map(() => new Array(fieldWidth.value)))
 
-    const timeRange = ref(1000)
+    const timeRange = ref(100)
 
     const cycleCounter = ref(0)
     const fullCycleCounter = ref(0)
