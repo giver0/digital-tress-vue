@@ -5,6 +5,7 @@
   align-items: center;
   margin: 16px;
   margin-top: 0px;
+  overflow: scroll;
 }
 
 .testArray {

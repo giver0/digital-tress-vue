@@ -2,7 +2,7 @@
   <div>
     <CellHeader />
     <div class="digital-tree__layout">
-      <div>
+      <div class="digital-tree__main-layer">
         <CellsField
           :field-cells="fieldCells"
           @clicked="displayCellParam"
@@ -93,7 +93,6 @@
               name="quantity"
               step="1"
               min="1"
-              max="40"
               class="counter-text-input"
             >
           </div>
@@ -107,7 +106,6 @@
               name="quantity"
               step="1"
               min="1"
-              max="40"
               class="counter-text-input"
             >
           </div>
@@ -169,7 +167,7 @@ const filedBox = {
     const fieldCells = ref(new Array(fieldHeight.value).fill(0)
       .map(() => new Array(fieldWidth.value)))
 
-    const timeRange = ref(0)
+    const timeRange = ref(1000)
 
     const cycleCounter = ref(0)
     const fullCycleCounter = ref(0)

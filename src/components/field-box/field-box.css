@@ -4,8 +4,11 @@
   display: flex;
   justify-content: space-between; */
   display: grid;
-  grid-template-columns: 1fr 240px;
+  grid-template-columns: minmax(0px, 1fr) 240px;
   margin-top: 16px;
+}
+
+.digital-tree__main-layer {
 
 }
 
