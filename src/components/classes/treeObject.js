@@ -140,20 +140,18 @@ export default class treeObject {
     const randomGenDirection = () => {
       const randomInt = this.getRandomInt(0, 4)
       if (randomInt === 0) {
-        return 'upGen'
+        this.genome[randomGenomRaw].upGen = this.getRandomInt(0, GENOME_MAX_VALUE)
       }
       if (randomInt === 1) {
-        return 'downGen'
+        this.genome[randomGenomRaw].downGen = this.getRandomInt(0, GENOME_MAX_VALUE)
       }
       if (randomInt === 2) {
-        return 'leftGen'
+        this.genome[randomGenomRaw].leftGen = this.getRandomInt(0, GENOME_MAX_VALUE)
       }
       if (randomInt === 3) {
-        return 'rightGen'
+        this.genome[randomGenomRaw].rightGen = this.getRandomInt(0, GENOME_MAX_VALUE)
       }
-
     }
-    this.genome[randomGenomRaw][randomGenDirection] = this.getRandomInt(0, GENOME_MAX_VALUE)
   }
 
   refreshLastCell() {

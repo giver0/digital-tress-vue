@@ -4,7 +4,7 @@
   display: flex;
   justify-content: space-between; */
   display: grid;
-  grid-template-columns: minmax(0px, 1fr) 240px;
+  grid-template-columns: minmax(0px, 1fr) 300px;
   margin-top: 16px;
 }
 

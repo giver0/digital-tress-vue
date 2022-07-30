@@ -324,6 +324,17 @@ const filedBox = {
           digitalTrees.value.splice(index, 1)
         }
       })
+      fieldCells.value.forEach(
+        raw => raw.forEach(
+          cell => {
+            if (cell?.parentTree !== null) {
+              if (cell?.parentTree.energy < 0) {
+                cell.setFieldType()
+              }
+            }
+          }
+        )
+      )
     }
 
     function logNewFullCycle() {
