@@ -77,6 +77,7 @@ export default class treeObject {
     this.counterCell = 1
     this.counterCellAll = 1
     this.refreshLastCell()
+    this.lastCell.color = this.headColor
     this.lastCell.genome = 0
     this.lastCell.parentTree = this
   }
@@ -462,8 +463,6 @@ export default class treeObject {
         this.fieldCells,
         this.logTextArray,
         this.genome,
-        this.headColor,
-        this.bodyColor,
       )
       newTree.addCellFromParent(cell)
       newTree.mutateGenome()
