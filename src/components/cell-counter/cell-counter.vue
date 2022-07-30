@@ -1,27 +1,45 @@
 <template>
-  <div class="cell-counter">
-    <div
-      class="block-counter-head"
-      :style="{background: headColor}"
-    >
-      <p
-        class="cellText"
-        :style="{color: headColor}"
+  <div>
+    <div>
+      <div
+        class="block-counter__header"
       >
-        {{ index }}
-      </p>
+        <p
+          class="block-counter__header-text"
+          style="color: white"
+        >
+          Tree count:  {{ digitalTrees.length }}
+        </p>
+      </div>
     </div>
     <div
-      class="block-counter"
-      :style="{background: bodyColor}"
+      v-for="(tree, index) in digitalTrees"
+      :key="tree.id"
+      class="cell-counter"
     >
-      <p
-        class="cellText"
-        :style="{color: bodyColor}"
+      <div
+        class="block-counter-head"
+        :style="{background: tree.headColor}"
       >
-        <!-- :style="{color: tree.color}" -->
-        Energ:{{ energy }}, Cells: {{ cellLength }}
-      </p>
+        <p
+          class="cellText"
+          :style="{color: tree.headColor}"
+        >
+          {{ index }}
+        </p>
+      </div>
+      <div
+        class="block-counter"
+        :style="{background: tree.bodyColor}"
+      >
+        <p
+          class="cellText"
+          :style="{color: tree.bodyColor}"
+        >
+          <!-- :style="{color: tree.color}" -->
+          Energ:{{ tree.energy }}, Cells: {{ tree.cells.length }}
+        </p>
+      </div>
     </div>
   </div>
 </template>
@@ -31,25 +49,9 @@
 export default {
   name: 'CellCounter',
   props: {
-    index: {
-      type: Number,
-      default: 0,
-    },
-    headColor: {
-      type: String,
-      default: '',
-    },
-    bodyColor: {
-      type: String,
-      default: '',
-    },
-    energy: {
-      type: Number,
-      default: 0,
-    },
-    cellLength: {
-      type: Number,
-      default: 0,
+    digitalTrees: {
+      type: Array,
+      default: () => [],
     },
   },
 }
