@@ -135,6 +135,27 @@ export default class treeObject {
     return genome
   }
 
+  mutateGenome() {
+    const randomGenomRaw =  this.getRandomInt(0, GENOME_COUNT)
+    const randomGenDirection = () => {
+      const randomInt = this.getRandomInt(0, 4)
+      if (randomInt === 0) {
+        return 'upGen'
+      }
+      if (randomInt === 1) {
+        return 'downGen'
+      }
+      if (randomInt === 2) {
+        return 'leftGen'
+      }
+      if (randomInt === 3) {
+        return 'rightGen'
+      }
+
+    }
+    this.genome[randomGenomRaw][randomGenDirection] = this.getRandomInt(0, GENOME_MAX_VALUE)
+  }
+
   refreshLastCell() {
     this.lastCell = this.cells[this.cells.length - 1]
   }
@@ -411,10 +432,12 @@ export default class treeObject {
     const isEnergyOver = this.energy < 0
     if (isEnergyOver) {
       if (this.cells.length <= 1) {
+        this.allCellToField
         this.deleteAllCells()
+      } else {
+        this.deleteTreeBody()
+        this.createTreeFromHeadCell()
       }
-      this.deleteTreeBody()
-      this.createTreeFromHeadCell()
       // this.deleteEmptyTrees()
     }
   }
@@ -445,6 +468,7 @@ export default class treeObject {
         this.bodyColor,
       )
       newTree.addCellFromParent(cell)
+      newTree.mutateGenome()
     })
   }
 
