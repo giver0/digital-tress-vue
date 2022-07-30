@@ -463,6 +463,8 @@ export default class treeObject {
         this.fieldCells,
         this.logTextArray,
         this.genome,
+        this.headColor,
+        this.bodyColor,
       )
       newTree.addCellFromParent(cell)
       newTree.mutateGenome()
