@@ -27,13 +27,16 @@
             color - {{ displayCell.color }}
           </div>
           <div class="tree-info__item">
-            indexInTree - {{ displayCell.indexInTree }}
-          </div>
-          <div class="tree-info__item">
             isCellFalling - {{ displayCell.isCellFalling }}
           </div>
           <div class="tree-info__item">
             parentTree - {{ displayCell.parentTree?.id }}
+          </div>
+          <div class="tree-info__item">
+            tree energy - {{ displayCell.parentTree?.energy }}
+          </div>
+          <div class="tree-info__item">
+            tree cells - {{ displayCell.parentTree?.cells.length }}
           </div>
           <div class="tree-info__item">
             isFreeCellsAround - {{ displayCell.parentTree?.isFreeCellsAround }}
@@ -183,7 +186,7 @@ const filedBox = {
     const fieldCells = ref(new Array(fieldHeight.value).fill(0)
       .map(() => new Array(fieldWidth.value)))
 
-    const timeRange = ref(100)
+    const timeRange = ref(1000)
 
     const cycleCounter = ref(0)
     const fullCycleCounter = ref(0)
@@ -285,12 +288,14 @@ const filedBox = {
         await sleep(timeRange.value)
         // console.log('======= new turn =======')
         chooseActionAtAllTree()
+        deleteEmptyTrees()
         // console.log('tree in main cycle', digitalTrees.value)
         cycleCounter.value += 1
         if (isGamePaused.value) {
           isGamePausedAtMoment.value = true
           return
         }
+        console.log('digitalTrees.value.length :>> ', digitalTrees.value);
         console.timeEnd('startCycle')
       }
       fullCycleCounter.value += 1
@@ -307,6 +312,25 @@ const filedBox = {
       for (const tree of digitalTrees.value) {
         await tree.chooseAction()
         // this.$forceUpdate()
+      }
+    }
+
+    function deleteEmptyTrees() {
+      let badTreeCount = 0
+      digitalTrees.value.forEach((tree, index) => {
+        if (tree.cells.length === 0 || tree.energy < 0) {
+          badTreeCount = badTreeCount + 1
+          console.log('index :>> ', index);
+          digitalTrees.value.splice(index, 1)
+        }
+      })
+      for (const index in badTreeCount) {
+      }
+      let treeIndex = -1
+      treeIndex = digitalTrees.value.findIndex(tree => tree.cells.length === 0 || tree.energy < 0)
+      if (treeIndex !== -1) {
+        digitalTrees.value.splice(treeIndex, 1)
+        treeIndex = digitalTrees.value.findIndex(tree => tree.cells.length === 0)
       }
     }
 

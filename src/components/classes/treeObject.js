@@ -15,7 +15,6 @@ export default class treeObject {
     bodyColor = this.generateRandomColor(),
   ) {
     this.digitalTrees = digitalTrees
-    digitalTrees.push(this)
     this.fieldCells = fieldCells
     this.logTextArray = logTextArray
     this.id = this.generateID()
@@ -30,6 +29,7 @@ export default class treeObject {
     this.positionNext = null
     this.energy = 20
     this.genome = genome
+    digitalTrees.push(this)
   }
 
   generateRandomColor() {
@@ -42,7 +42,7 @@ export default class treeObject {
   }
 
   generateID() {
-    const length = 3
+    const length = 6
     let result = ''
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
     const charactersLength = characters.length
@@ -340,21 +340,6 @@ export default class treeObject {
     this.bodyColor = this.generateRandomColor()
   }
 
-  deleteTreeBody() {
-    // console.log('in delete body');
-
-    this.cells.forEach(cell => {
-      if (cell.color === this.bodyColor) {
-        cell.setFieldType()
-      }
-    })
-    this.cells = this.cells.filter(cell => cell.color === this.headColor)
-
-    this.cells.forEach(cell => cell.cellFalling())
-
-    this.counterCell = 1
-  }
-
   moveCellDown() {
     // console.log('i:', this.i, 'j:', this.j, 'Tree id:', this.parentTree);
     // console.log('field move', this.fieldCells[this.j][this.i]);
@@ -423,14 +408,27 @@ export default class treeObject {
     const isEnergyOver = this.energy < 0
     if (isEnergyOver) {
       this.deleteTreeBody()
-      if (this.cells.length > 1) {
-        this.createTreeFromHeadCell()
-      }
       if (this.cells.length <= 1) {
         this.deleteAllCells()
       }
-      this.deleteEmptyTrees()
+      this.createTreeFromHeadCell()
+      // this.deleteEmptyTrees()
     }
+  }
+
+  deleteTreeBody() {
+    // console.log('in delete body');
+
+    this.cells.forEach(cell => {
+      if (cell.color === this.bodyColor) {
+        cell.setFieldType()
+      }
+    })
+    this.cells = this.cells.filter(cell => cell.color === this.headColor)
+
+    this.cells.forEach(cell => cell.cellFalling())
+
+    this.counterCell = 1
   }
 
   createTreeFromHeadCell() {
@@ -448,22 +446,14 @@ export default class treeObject {
   }
 
   deleteAllCells() {
-    this.cells.forEach(cell => cell.setFieldType())
     this.cells = []
+    this.lastCell = {}
   }
 
   deleteEmptyTrees() {
-      const treeIndex = this.digitalTrees.findIndex(tree => tree.cells.length === 0)
-      if (treeIndex !== -1) {
-        this.digitalTrees.splice(treeIndex, 1)
-      }
-    // this.digitalTrees.forEach(tree => {
-    //   let treeIndex = this.digitalTrees.findIndex(tree => tree.cells.length === 0)
-    //   while (treeIndex !== -1) {
-    //     this.digitalTrees.splice(treeIndex, 1)
-    //   }
-    // }
-
-    // })
+    const treeIndex = this.digitalTrees.findIndex(tree => tree.cells.length === 0)
+    if (treeIndex !== -1) {
+      this.digitalTrees.splice(treeIndex, 1)
+    }
   }
 }
