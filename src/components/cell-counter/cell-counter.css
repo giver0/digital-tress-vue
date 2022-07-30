@@ -1,3 +1,13 @@
+.block-counter__header {
+  background: gray;
+  margin-bottom: 8px;
+  height: 24px;
+}
+
+.block-counter__header-text {
+  color: white;
+  margin: 0px;
+}
 
 .cell-counter{
   display: flex;
@@ -5,7 +15,6 @@
   align-items: center;
   margin-right: 8px;
   margin-bottom: 8px;
-
 }
 
 .block-counter {

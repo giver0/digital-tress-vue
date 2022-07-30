@@ -126,13 +126,7 @@
           class="digital-tree__counter-trees-cell-boxs"
         >
           <CellCounter
-            v-for="(tree, index) in digitalTrees"
-            :key="tree.id"
-            :head-color="tree.headColor"
-            :body-color="tree.bodyColor"
-            :energy="tree.energy"
-            :cell-length="tree?.cells?.length"
-            :index="index"
+            :digital-trees="digitalTrees"
           />
         </div>
         <!-- <LogBox
@@ -320,18 +314,11 @@ const filedBox = {
       digitalTrees.value.forEach((tree, index) => {
         if (tree.cells.length === 0 || tree.energy < 0) {
           badTreeCount = badTreeCount + 1
-          console.log('index :>> ', index);
+          tree.allCellToField()
+          tree.deleteAllCells()
           digitalTrees.value.splice(index, 1)
         }
       })
-      for (const index in badTreeCount) {
-      }
-      let treeIndex = -1
-      treeIndex = digitalTrees.value.findIndex(tree => tree.cells.length === 0 || tree.energy < 0)
-      if (treeIndex !== -1) {
-        digitalTrees.value.splice(treeIndex, 1)
-        treeIndex = digitalTrees.value.findIndex(tree => tree.cells.length === 0)
-      }
     }
 
     function logNewFullCycle() {

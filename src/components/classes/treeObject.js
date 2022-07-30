@@ -445,6 +445,10 @@ export default class treeObject {
     })
   }
 
+  allCellToField() {
+    this.cells.forEach(cell => cell.setFieldType)
+  }
+
   deleteAllCells() {
     this.cells = []
     this.lastCell = {}
