@@ -29,6 +29,8 @@ export default class treeObject {
     this.positionNext = null
     this.energy = 20
     this.genome = genome
+    this.lastIncreaseEnergy = 0
+    this.lastReduceEnergy = 0
     digitalTrees.push(this)
   }
 
@@ -392,25 +394,26 @@ export default class treeObject {
   }
 
   increaseEnergy() {
+    let generatedEnergyByCell = 0
     this.cells.forEach(cell => {
-      const generatedEnergyByCell = cell.generatedEnergyByCell()
-      if (generatedEnergyByCell) {
-        this.energy = this.energy + cell.generatedEnergyByCell()
-      }
+      generatedEnergyByCell = generatedEnergyByCell + cell.generatedEnergyByCell()
     })
+    this.lastIncreaseEnergy = generatedEnergyByCell
+    this.energy = this.energy + generatedEnergyByCell
   }
 
   reduceEnergy() {
+    this.lastReduceEnergy = this.cells.length
     this.energy = this.energy - this.cells.length
   }
 
   checkIsEnergyOver() {
     const isEnergyOver = this.energy < 0
     if (isEnergyOver) {
-      this.deleteTreeBody()
       if (this.cells.length <= 1) {
         this.deleteAllCells()
       }
+      this.deleteTreeBody()
       this.createTreeFromHeadCell()
       // this.deleteEmptyTrees()
     }

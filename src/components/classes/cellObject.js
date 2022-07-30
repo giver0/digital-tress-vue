@@ -54,6 +54,10 @@ export default class cellObject {
       if (isCellAtUpperPoint) {
         return 3
       }
+      const isCellAtLowerPoint = this.j === this.fieldCells.length - 1
+      if (isCellAtLowerPoint) {
+        return 0
+      }
       let cellGeneratedEnergy = 0
       for (let index = 1; index < countCellAbove + 1; index++) {
         const jForCheck = this.j - index

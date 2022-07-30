@@ -82,6 +82,16 @@
   color: #222528;
 }
 
+.digital-tree__counter-default {
+  height: 20px;
+  filter: invert(0.5);
+}
+
+.digital-tree__counter-default:hover {
+  cursor: pointer;
+  filter: invert(0);
+}
+
 .counter-text-input {
   width: 56px;
   margin-right: 8px;

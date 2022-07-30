@@ -37,7 +37,7 @@
           :style="{color: tree.bodyColor}"
         >
           <!-- :style="{color: tree.color}" -->
-          Energ:{{ tree.energy }}, Cells: {{ tree.cells.length }}
+          Energ:{{ tree.energy }}, Cells: {{ tree.cells.length }} +{{ tree.lastIncreaseEnergy }} / -{{ tree.lastReduceEnergy }}
         </p>
       </div>
     </div>

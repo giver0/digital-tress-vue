@@ -62,6 +62,11 @@
             <div class="digital-tree__counter-text">
               Delay (ms)
             </div>
+            <img
+              src="@/assets/close.svg"
+              class="digital-tree__counter-default"
+              @click="handleDelay"
+            >
             <input
               id="counter-speed"
               v-model="timeRange"
@@ -431,6 +436,10 @@ const filedBox = {
       // displayCell.value = cell
     }
 
+    function handleDelay() {
+      timeRange.value = 0
+    }
+
     return {
       treeCount,
       timeRange,
@@ -446,6 +455,7 @@ const filedBox = {
       fullCycleCounter,
       sortedDigitalTrees,
       pauseGame,
+      handleDelay,
       ChangeColor,
       displayCellParam,
     }
