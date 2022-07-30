@@ -1,22 +1,14 @@
 <template>
   <div
-    :class="{
-      block: true,
-      create_block_animation: cellIsCreateAnimation,
-      change_size_animation: cellIsCellAnimation
-    }"
-    :style="{background: cellColor}"
+    :class="classOptions"
+    :style="styleOptions"
+    @click="sayHello"
   >
     <p
       v-if="cellType==='cell'"
       :class="{cellText: true, }"
       :style="{color: cellColor}"
     >
-      <!-- {{cellObject.id}} -->
-      <!-- {{cellObject.id}} -->
-      <!-- {{cellObject.parentTree.id}}-{{cellObject.indexInTree}} -->
-      <!-- {{cellObject.j}}-{{cellObject.i}} id{{cellObject.parentTree.id}} -->
-
       <!-- {{cellObject.j}}-{{cellObject.i}} id:{{cellObject.parentTree.id}} -->
     </p>
   </div>
@@ -24,7 +16,7 @@
 
 <script>
 
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 
 export default {
   name: 'CellObject',
@@ -37,6 +29,10 @@ export default {
       type: String,
       default: '',
     },
+    cellParentTreeId: {
+      type: String,
+      default: '',
+    },
     cellIsCreateAnimation: {
       type: Boolean,
       default: false,
@@ -45,18 +41,42 @@ export default {
       type: Boolean,
       default: false,
     },
+    choosenTreeId: {
+      type: String,
+      default: 'none',
+    },
   },
 
   setup(props) {
     const isField = ref('false')
     const isCell = ref('false')
+    const isCellChoosed = computed(() => props.cellParentTreeId === props.choosenTreeId)
+    const classOptions = computed(() => {
+      return {
+        block: true,
+        create_block_animation: props.cellIsCreateAnimation,
+        change_size_animation: props.cellIsCellAnimation,
+        'block--choosed': isCellChoosed.value,
+      }
+    })
+    const styleOptions = computed(() => {
+      return {
+        background: props.cellColor,
+      }
+    })
 
     isField.value = computed(() => props.cellType === 'field')
     isCell.value = computed(() => props.cellType === 'cell')
 
+    function sayHello() {
+    }
+
     return {
-      isField,
       isCell,
+      isField,
+      classOptions,
+      styleOptions,
+      sayHello,
     }
   },
 }

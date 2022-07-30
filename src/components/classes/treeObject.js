@@ -137,7 +137,7 @@ export default class treeObject {
   }
 
   mutateGenome() {
-    const randomGenomRaw =  this.getRandomInt(0, GENOME_COUNT)
+    const randomGenomRaw = this.getRandomInt(0, GENOME_COUNT)
     const randomGenDirection = () => {
       const randomInt = this.getRandomInt(0, 4)
       if (randomInt === 0) {

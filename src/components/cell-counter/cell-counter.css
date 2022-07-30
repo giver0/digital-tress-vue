@@ -15,6 +15,7 @@
   align-items: center;
   margin-right: 8px;
   margin-bottom: 8px;
+  cursor: pointer;
 }
 
 .block-counter {

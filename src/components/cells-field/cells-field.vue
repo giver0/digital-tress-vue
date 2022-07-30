@@ -13,8 +13,10 @@
         <CellBlock
           :cell-color="cell.color"
           :cell-type="cell.type"
+          :cell-parent-tree-id="cell?.parentTree?.id"
           :cell-is-create-animation="cell?.isCreateAnimation"
           :cell-is-cell-animation="cell?.isCellAnimation"
+          :choosen-tree-id="choosenTreeId"
           @click="$emit('clicked', cell.i, cell.j)"
         />
       </div>
@@ -33,6 +35,11 @@ export default {
   props: {
     fieldCells: {
       type: Array,
+      default: () => [],
+    },
+    choosenTreeId: {
+      type: String,
+      default: 'none',
     },
   },
 }

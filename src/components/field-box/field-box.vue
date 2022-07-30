@@ -5,6 +5,7 @@
       <div class="digital-tree__main-layer">
         <CellsField
           :field-cells="fieldCells"
+          :choosen-tree-id="displayCell?.parentTree?.id"
           @clicked="displayCellParam"
         />
         <div
@@ -132,6 +133,7 @@
         >
           <CellCounter
             :digital-trees="digitalTrees"
+            @clicked="displayCellParam"
           />
         </div>
         <!-- <LogBox
@@ -294,7 +296,7 @@ const filedBox = {
           isGamePausedAtMoment.value = true
           return
         }
-        console.log('digitalTrees.value.length :>> ', digitalTrees.value);
+        // console.log('digitalTrees.value.length :>> ', digitalTrees.value);
         console.timeEnd('startCycle')
       }
       fullCycleCounter.value += 1
@@ -332,8 +334,8 @@ const filedBox = {
                 cell.setFieldType()
               }
             }
-          }
-        )
+          },
+        ),
       )
     }
 

@@ -15,6 +15,11 @@
   cursor: pointer;
 }
 
+.block--choosed {
+  border: 5px dashed black;
+  box-sizing: border-box;
+}
+
 .cellText{
   filter: invert(1);
 }

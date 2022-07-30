@@ -16,6 +16,7 @@
       v-for="(tree, index) in digitalTrees"
       :key="tree.id"
       class="cell-counter"
+      @click="$emit('clicked', tree.lastCell.i, tree.lastCell.j)"
     >
       <div
         class="block-counter-head"
