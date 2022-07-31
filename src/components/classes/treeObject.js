@@ -27,7 +27,7 @@ export default class treeObject {
     this.bodyColor = bodyColor
     this.positionCurrent = null
     this.positionNext = null
-    this.energy = 20
+    this.energy = 10
     this.genome = genome
     this.lastIncreaseEnergy = 0
     this.lastReduceEnergy = 0
