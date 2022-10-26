@@ -1,4 +1,6 @@
 # digital-trees-vue
+## GitHub Pages
+https://ivan-hryshko.github.io/digital-trees-vue/
 
 ## Project setup
 ```
