@@ -126,6 +126,10 @@ export default class treeObject {
     const genome = new Array(GENOME_COUNT).fill(0)
     .map(() => {
       return {
+        // feature for future
+        // upGen: {
+        //   nextGen: this.getRandomInt(0, GENOME_MAX_VALUE),
+        // },
         upGen: this.getRandomInt(0, GENOME_MAX_VALUE),
         downGen: this.getRandomInt(0, GENOME_MAX_VALUE),
         leftGen: this.getRandomInt(0, GENOME_MAX_VALUE),
@@ -157,65 +161,6 @@ export default class treeObject {
 
   refreshLastCell() {
     this.lastCell = this.cells[this.cells.length - 1]
-  }
-
-  chooseAction() {
-    if (this.lastCell.isCellFalling) {
-      // console.time('moveCellDown')
-      this.moveCellDown()
-      // console.timeEnd('moveCellDown')
-    } else {
-      // console.time('realiseGenome')
-      this.realiseGenome()
-      // this.createCell()
-      // console.timeEnd('realiseGenome')
-    }
-    // console.time('refreshEnergy')
-    this.refreshEnergy()
-    // console.timeEnd('refreshEnergy')
-  }
-
-  realiseGenome() {
-    this.cells.forEach(cell => {
-      if (cell.color === this.headColor) {
-        const cellGenome = this.genome[cell.genome]
-        // for (const gen in cellGenome) {
-        //   cellGenome[gen]
-
-        // }
-        // console.log('cellGenome', cellGenome);
-        let newI = null
-        let newJ = null
-        if (cellGenome.upGen <= 15) {
-          newI = cell.i
-          newJ = cell.j - 1
-          if (this.isNextCellField(newI, newJ)) {
-            this.createCellGenome(cell, newI, newJ, cellGenome.upGen)
-          }
-        }
-        if (cellGenome.downGen <= 15) {
-          newI = cell.i
-          newJ = cell.j + 1
-          if (this.isNextCellField(newI, newJ)) {
-            this.createCellGenome(cell, newI, newJ, cellGenome.downGen)
-          }
-        }
-        if (cellGenome.leftGen <= 15) {
-          newI = cell.i - 1
-          newJ = cell.j
-          if (this.isNextCellField(newI, newJ)) {
-            this.createCellGenome(cell, newI, newJ, cellGenome.leftGen)
-          }
-        }
-        if (cellGenome.rightGen <= 15) {
-          newI = cell.i + 1
-          newJ = cell.j
-          if (this.isNextCellField(newI, newJ)) {
-            this.createCellGenome(cell, newI, newJ, cellGenome.rightGen)
-          }
-        }
-      }
-    })
   }
 
   createCellGenome(cell, newI, newJ, genomeToImplement) {
@@ -360,45 +305,6 @@ export default class treeObject {
   changeRandomColor() {
     this.headColor = this.generateRandomColor()
     this.bodyColor = this.generateRandomColor()
-  }
-
-  moveCellDown() {
-    // console.log('i:', this.i, 'j:', this.j, 'Tree id:', this.parentTree);
-    // console.log('field move', this.fieldCells[this.j][this.i]);
-    if (this.lastCell.j === this.fieldCells.length - 1) {
-      // console.log('At bottom');
-      this.lastCell.isCellFalling = false
-      this.lastCell.isFreeCellsAround = true
-      this.realiseGenome()
-    } else {
-      // const nextJ = this.j + 1
-      // console.log('need move');
-      this.positionCurrent = this.lastCell
-      this.positionNext = this.fieldCells[this.positionCurrent.j + 1][this.positionCurrent.i]
-      // console.log('positionNext', this.positionNext);
-      const isBottomCellField = this.positionNext.type === TYPE_FIELD
-      // console.log('isBottomCellField', isBottomCellField);
-      if (isBottomCellField) {
-        // console.log('moveTo');
-        // console.log(this);
-
-        const keyToCopy = [
-          'type',
-          'color',
-          'parentTree',
-          'isCellFalling',
-          'indexInTree',
-        ]
-
-        keyToCopy.forEach(key => {
-          this.positionNext[key] = this.positionCurrent[key]
-        })
-
-        this.lastCell = this.positionNext
-        this.cells[0] = this.positionNext
-        this.positionCurrent.setFieldType()
-      }
-    }
   }
 
   refreshEnergy() {

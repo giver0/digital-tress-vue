@@ -158,6 +158,7 @@
 
 <script>
 
+import { ref, onMounted, watch, computed } from 'vue'
 import cellObject from '../classes/cellObject'
 import treeObject from '../classes/treeObject'
 import ControlButton from '../control-button'
@@ -166,7 +167,7 @@ import CellCounter from '../cell-counter'
 import CellsField from '../cells-field'
 import CycleCounter from '../cycle-counter'
 import LogBox from '../log-box'
-import { ref, onMounted, watch, computed } from 'vue'
+import useTrees from '@/use/use-trees'
 
 const filedBox = {
   name: 'fieldBox',
@@ -179,6 +180,9 @@ const filedBox = {
     LogBox,
   },
   setup() {
+    const {
+      chooseAction,
+    } = useTrees()
     const logTextArray = ref([])
     const fieldWidth = ref(30)
     const fieldHeight = ref(10)
@@ -309,9 +313,9 @@ const filedBox = {
       })
     }
 
-    async function chooseActionAtAllTree() {
+    function chooseActionAtAllTree() {
       for (const tree of digitalTrees.value) {
-        await tree.chooseAction()
+        chooseAction(tree)
         // this.$forceUpdate()
       }
     }
