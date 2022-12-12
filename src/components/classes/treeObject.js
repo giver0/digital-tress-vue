@@ -55,7 +55,6 @@ export default class treeObject {
   }
 
   addFirstCell() {
-    try {
       const firstCell = this.randomCellFloor()
       this.cells.push(firstCell)
 
@@ -66,10 +65,6 @@ export default class treeObject {
       this.cells[0].genome = 0
       this.refreshLastCell()
       this.createCellLog()
-    } catch (error) {
-      console.log('========== Some Error ==========')
-      console.log(error)
-    }
   }
 
   addCellFromParent(cell) {
@@ -161,31 +156,6 @@ export default class treeObject {
 
   refreshLastCell() {
     this.lastCell = this.cells[this.cells.length - 1]
-  }
-
-  createCellGenome(cell, newI, newJ, genomeToImplement) {
-    // console.log(`next i and j`, i, j);
-    cell.setColor(this.bodyColor)
-    const nextCell = this.fieldCells[newJ][newI]
-    nextCell.setColor(this.headColor)
-    nextCell.setCellType()
-
-    this.counterCellAll = this.counterCellAll + 1
-    this.counterCell = this.counterCell + 1
-    nextCell.indexInTree = this.counterCellAll
-    nextCell.genome = genomeToImplement
-    nextCell.parentTree = this
-    this.cells.push(nextCell)
-    this.refreshLastCell()
-    this.createCellLog()
-  }
-
-  isNextCellField(newI, newJ) {
-    if (newJ in this.fieldCells && newI in this.fieldCells[newJ]) {
-      return this.fieldCells[newJ][newI]?.color === BASIC_COLOR
-    } else {
-      return false
-    }
   }
 
   createCell() {
