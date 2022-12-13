@@ -4,6 +4,7 @@ import {
   GENOME_COUNT,
   GENOME_MAX_VALUE,
 } from '@/constant/basic'
+import treeObject from '@/components/classes/treeObject'
 
 export const useTrees = () => {
   function chooseAction(tree, fieldCells) {
@@ -18,8 +19,9 @@ export const useTrees = () => {
       // console.timeEnd('realiseGenome')
     }
     // console.time('refreshEnergy')
-    tree.refreshEnergy()
+    refreshEnergy(tree)
     // console.timeEnd('refreshEnergy')
+    isAnyCellAtBottom(tree, fieldCells.length)
   }
 
   function realiseGenome(tree, fieldCells) {
@@ -126,6 +128,16 @@ export const useTrees = () => {
     }
   }
 
+  function addCellFromParent(cell, newTree) {
+    newTree.cells.push(cell)
+    newTree.counterCell = 1
+    newTree.counterCellAll = 1
+    newTree.refreshLastCell()
+    newTree.lastCell.color = newTree.headColor
+    newTree.lastCell.genome = 0
+    newTree.lastCell.parentTree = newTree
+  }
+
   function createCellGenome(cell, newI, newJ, genomeToImplement, tree) {
     // console.log(`next i and j`, i, j);
     cell.setColor(tree.bodyColor)
@@ -139,12 +151,145 @@ export const useTrees = () => {
     nextCell.genome = genomeToImplement
     nextCell.parentTree = tree
     tree.cells.push(nextCell)
-    tree.refreshLastCell()
-    tree.createCellLog()
+    refreshLastCell(tree)
+    createCellLog(tree)
+  }
+
+  function refreshLastCell(tree) {
+    tree.lastCell = tree.cells[tree.cells.length - 1]
+  }
+
+  function createCellLog(tree) {
+    // let logText = "Create cell column:" + tree.lastCell.i + ", raw:" + tree.lastCell.j +", TreeID: "+tree.id
+    const logObject = {
+      i: tree.lastCell.i,
+      j: tree.lastCell.j,
+      id: tree.id,
+      type: 'create',
+      headColor: tree.headColor,
+      bodyColor: tree.bodyColor,
+    }
+    tree.logTextArray.push(logObject)
+    if (tree.logTextArray.length > 50) {
+      tree.logTextArray.shift()
+    }
+  }
+
+  function refreshEnergy(tree) {
+    // console.time('increaseEnergy')
+    increaseEnergy(tree)
+    // console.timeEnd('increaseEnergy')
+    // console.time('reduceEnergy')
+    reduceEnergy(tree)
+    // console.timeEnd('reduceEnergy')
+    // console.time('checkIsEnergyOver')
+    checkIsEnergyOver(tree)
+    // console.timeEnd('checkIsEnergyOver')
+  }
+
+  function increaseEnergy(tree) {
+    let generatedEnergyByCell = 0
+    tree.cells.forEach(cell => {
+      generatedEnergyByCell = generatedEnergyByCell + cell.generatedEnergyByCell()
+    })
+    tree.lastIncreaseEnergy = generatedEnergyByCell
+    tree.energy = tree.energy + generatedEnergyByCell
+  }
+
+  function reduceEnergy(tree) {
+    tree.lastReduceEnergy = tree.cells.length
+    tree.energy = tree.energy - tree.cells.length
+  }
+
+  function checkIsEnergyOver(tree) {
+    const isEnergyOver = tree.energy < 0
+    if (isEnergyOver) {
+      if (tree.cells.length <= 1) {
+        allCellToField(tree)
+        deleteAllCells(tree)
+      } else {
+        deleteTreeBody(tree)
+        createTreeFromHeadCell(tree)
+      }
+      // tree.deleteEmptyTrees()
+    }
+  }
+
+  function allCellToField(tree) {
+    tree.cells.forEach(cell => cell.setFieldType)
+  }
+
+  function deleteAllCells(tree) {
+    tree.cells = []
+    tree.lastCell = {}
+  }
+
+  function deleteTreeBody(tree) {
+    // console.log('in delete body');
+
+    tree.cells.forEach(cell => {
+      if (cell.color === tree.bodyColor) {
+        cell.setFieldType()
+      }
+    })
+    tree.cells = tree.cells.filter(cell => cell.color === tree.headColor)
+
+    tree.cells.forEach(cell => cell.cellFalling())
+
+    tree.counterCell = 1
+  }
+
+  function createTreeFromHeadCell(tree) {
+    tree.cells.forEach(cell => {
+      const newTree = new treeObject(
+        tree.digitalTrees,
+        tree.fieldCells,
+        tree.logTextArray,
+        tree.genome,
+        tree.headColor,
+        tree.bodyColor,
+      )
+      addCellFromParent(cell, newTree)
+      mutateGenome(newTree)
+    })
+  }
+
+  function mutateGenome(tree) {
+    const randomGenomRaw = tree.getRandomInt(0, GENOME_COUNT)
+    const randomGenDirection = () => {
+      const randomInt = tree.getRandomInt(0, 4)
+      if (randomInt === 0) {
+        tree.genome[randomGenomRaw].upGen = tree.getRandomInt(0, GENOME_MAX_VALUE)
+      }
+      if (randomInt === 1) {
+        tree.genome[randomGenomRaw].downGen = tree.getRandomInt(0, GENOME_MAX_VALUE)
+      }
+      if (randomInt === 2) {
+        tree.genome[randomGenomRaw].leftGen = tree.getRandomInt(0, GENOME_MAX_VALUE)
+      }
+      if (randomInt === 3) {
+        tree.genome[randomGenomRaw].rightGen = tree.getRandomInt(0, GENOME_MAX_VALUE)
+      }
+    }
+  }
+
+  function isAnyCellAtBottom(tree, fieldCellsHeight) {
+    let isAtBottom = false
+    tree.cells.forEach(cell => {
+      if (cell.j === fieldCellsHeight - 1 && cell.isCellFalling === false) {
+        isAtBottom = true
+      }
+      if (!isAtBottom) {
+        console.log('tree :>> ', tree);
+        throw new Error("no cell on bottom");
+      }
+    })
   }
 
   return {
     chooseAction,
+    allCellToField,
+    deleteAllCells,
   }
 }
 

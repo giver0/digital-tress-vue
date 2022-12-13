@@ -67,16 +67,6 @@ export default class treeObject {
       this.createCellLog()
   }
 
-  addCellFromParent(cell) {
-    this.cells.push(cell)
-    this.counterCell = 1
-    this.counterCellAll = 1
-    this.refreshLastCell()
-    this.lastCell.color = this.headColor
-    this.lastCell.genome = 0
-    this.lastCell.parentTree = this
-  }
-
   chooseRandomStartCell() {
     let whileCounter = 0
     let j
@@ -133,25 +123,6 @@ export default class treeObject {
     })
     console.log('genome', genome)
     return genome
-  }
-
-  mutateGenome() {
-    const randomGenomRaw = this.getRandomInt(0, GENOME_COUNT)
-    const randomGenDirection = () => {
-      const randomInt = this.getRandomInt(0, 4)
-      if (randomInt === 0) {
-        this.genome[randomGenomRaw].upGen = this.getRandomInt(0, GENOME_MAX_VALUE)
-      }
-      if (randomInt === 1) {
-        this.genome[randomGenomRaw].downGen = this.getRandomInt(0, GENOME_MAX_VALUE)
-      }
-      if (randomInt === 2) {
-        this.genome[randomGenomRaw].leftGen = this.getRandomInt(0, GENOME_MAX_VALUE)
-      }
-      if (randomInt === 3) {
-        this.genome[randomGenomRaw].rightGen = this.getRandomInt(0, GENOME_MAX_VALUE)
-      }
-    }
   }
 
   refreshLastCell() {
@@ -275,85 +246,6 @@ export default class treeObject {
   changeRandomColor() {
     this.headColor = this.generateRandomColor()
     this.bodyColor = this.generateRandomColor()
-  }
-
-  refreshEnergy() {
-    // console.time('increaseEnergy')
-    this.increaseEnergy()
-    // console.timeEnd('increaseEnergy')
-    // console.time('reduceEnergy')
-    this.reduceEnergy()
-    // console.timeEnd('reduceEnergy')
-    // console.time('checkIsEnergyOver')
-    this.checkIsEnergyOver()
-    // console.timeEnd('checkIsEnergyOver')
-  }
-
-  increaseEnergy() {
-    let generatedEnergyByCell = 0
-    this.cells.forEach(cell => {
-      generatedEnergyByCell = generatedEnergyByCell + cell.generatedEnergyByCell()
-    })
-    this.lastIncreaseEnergy = generatedEnergyByCell
-    this.energy = this.energy + generatedEnergyByCell
-  }
-
-  reduceEnergy() {
-    this.lastReduceEnergy = this.cells.length
-    this.energy = this.energy - this.cells.length
-  }
-
-  checkIsEnergyOver() {
-    const isEnergyOver = this.energy < 0
-    if (isEnergyOver) {
-      if (this.cells.length <= 1) {
-        this.allCellToField
-        this.deleteAllCells()
-      } else {
-        this.deleteTreeBody()
-        this.createTreeFromHeadCell()
-      }
-      // this.deleteEmptyTrees()
-    }
-  }
-
-  deleteTreeBody() {
-    // console.log('in delete body');
-
-    this.cells.forEach(cell => {
-      if (cell.color === this.bodyColor) {
-        cell.setFieldType()
-      }
-    })
-    this.cells = this.cells.filter(cell => cell.color === this.headColor)
-
-    this.cells.forEach(cell => cell.cellFalling())
-
-    this.counterCell = 1
-  }
-
-  createTreeFromHeadCell() {
-    this.cells.forEach(cell => {
-      const newTree = new treeObject(
-        this.digitalTrees,
-        this.fieldCells,
-        this.logTextArray,
-        this.genome,
-        this.headColor,
-        this.bodyColor,
-      )
-      newTree.addCellFromParent(cell)
-      newTree.mutateGenome()
-    })
-  }
-
-  allCellToField() {
-    this.cells.forEach(cell => cell.setFieldType)
-  }
-
-  deleteAllCells() {
-    this.cells = []
-    this.lastCell = {}
   }
 
   deleteEmptyTrees() {

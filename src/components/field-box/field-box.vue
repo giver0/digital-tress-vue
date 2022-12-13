@@ -182,6 +182,8 @@ const filedBox = {
   setup() {
     const {
       chooseAction,
+      allCellToField,
+      deleteAllCells,
     } = useTrees()
     const logTextArray = ref([])
     const fieldWidth = ref(30)
@@ -325,8 +327,8 @@ const filedBox = {
       digitalTrees.value.forEach((tree, index) => {
         if (tree.cells.length === 0 || tree.energy < 0) {
           badTreeCount = badTreeCount + 1
-          tree.allCellToField()
-          tree.deleteAllCells()
+          allCellToField(tree)
+          deleteAllCells(tree)
           digitalTrees.value.splice(index, 1)
         }
       })
