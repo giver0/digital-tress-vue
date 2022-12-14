@@ -1,10 +1,18 @@
 <template>
   <div class="blocks-field">
+    <div class="blocks-field__column-index">
+      <div v-for="(cellRaw, index) in fieldCells[0]">
+        {{index}}
+      </div>
+    </div>
     <div
       v-for="(cellRaw, index) in fieldCells"
       :key="index"
       class="testArray"
     >
+    <div class="blocks-field__row-index">
+      {{index}}
+    </div>
       <div
         v-for="cell in cellRaw"
         :key="cell.id"

@@ -8,6 +8,19 @@
   overflow: scroll;
 }
 
+.blocks-field__row-index {
+  margin-right: 8px;
+}
+
+.blocks-field__column-index {
+  display: flex;
+  margin-left: 20px;
+}
+
+.blocks-field__column-index div {
+  width: 33px;
+}
+
 .testArray {
   display: flex;
   justify-content: center;
