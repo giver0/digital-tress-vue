@@ -185,6 +185,7 @@ const filedBox = {
       chooseAction,
       allCellToField,
       deleteAllCells,
+      changeRandomColor,
     } = useTrees()
     const {
       isAnyCellAtBottom,
@@ -391,7 +392,7 @@ const filedBox = {
 
     function changeTreesColor() {
       for (const tree of digitalTrees.value) {
-        tree.changeRandomColor()
+        changeRandomColor(tree)
       }
     }
 

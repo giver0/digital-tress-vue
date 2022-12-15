@@ -293,10 +293,16 @@ export const useTrees = () => {
     }
   }
 
+  function changeRandomColor(tree) {
+    tree.headColor = tree.generateRandomColor()
+    tree.bodyColor = tree.generateRandomColor()
+  }
+
   return {
     chooseAction,
     allCellToField,
     deleteAllCells,
+    changeRandomColor,
   }
 }
 

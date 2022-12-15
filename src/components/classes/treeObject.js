@@ -4,6 +4,12 @@ import {
   GENOME_COUNT,
   GENOME_MAX_VALUE,
 } from '@/constant/basic'
+import useGeneral from '@/use/use-general'
+
+const {
+  generateID,
+  generateRandomColor,
+} = useGeneral()
 
 export default class treeObject {
   constructor(
@@ -11,13 +17,13 @@ export default class treeObject {
     fieldCells,
     logTextArray,
     genome = this.gererateGenome(),
-    headColor = this.generateRandomColor(),
-    bodyColor = this.generateRandomColor(),
+    headColor = generateRandomColor(),
+    bodyColor = generateRandomColor(),
   ) {
     this.digitalTrees = digitalTrees
     this.fieldCells = fieldCells
     this.logTextArray = logTextArray
-    this.id = this.generateID()
+    this.id = generateID()
     this.cells = []
     this.counterCell = 0
     this.counterCellAll = 0
@@ -34,37 +40,17 @@ export default class treeObject {
     digitalTrees.push(this)
   }
 
-  generateRandomColor() {
-    let randomColor = BASIC_COLOR
-    while (randomColor === BASIC_COLOR) {
-      randomColor = '#'
-      randomColor += Math.floor(Math.random() * 16777215).toString(16)
-    }
-    return randomColor
-  }
-
-  generateID() {
-    const length = 6
-    let result = ''
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
-    const charactersLength = characters.length
-    for (let i = 0; i < length; i++) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength))
-    }
-    return result
-  }
-
   addFirstCell() {
-      const firstCell = this.randomCellFloor()
-      this.cells.push(firstCell)
+    const firstCell = this.randomCellFloor()
+    this.cells.push(firstCell)
 
-      this.cells[0].setColor(this.headColor)
-      this.cells[0].setCellType()
-      this.cells[0].parentTree = this
-      this.cells[0].indexInTree = this.cells.length - 1
-      this.cells[0].genome = 0
-      this.refreshLastCell()
-      this.createCellLog()
+    this.cells[0].setColor(this.headColor)
+    this.cells[0].setCellType()
+    this.cells[0].parentTree = this
+    this.cells[0].indexInTree = this.cells.length - 1
+    this.cells[0].genome = 0
+    this.refreshLastCell()
+    this.createCellLog()
   }
 
   chooseRandomStartCell() {
@@ -244,11 +230,6 @@ export default class treeObject {
     this.isFreeCellsAround = true
     this.cells = []
     this.lastCell = null
-  }
-
-  changeRandomColor() {
-    this.headColor = this.generateRandomColor()
-    this.bodyColor = this.generateRandomColor()
   }
 
   deleteEmptyTrees() {
