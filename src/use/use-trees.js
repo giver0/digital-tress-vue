@@ -5,22 +5,21 @@ import {
   GENOME_MAX_VALUE,
 } from '@/constant/basic'
 import treeObject from '@/components/classes/treeObject'
+import useGeneral from '@/use/use-general'
 
 export const useTrees = () => {
+  const {
+    changeLittleBitColor,
+  } = useGeneral()
+
   function chooseAction(tree, fieldCells, digitalTrees) {
     if (tree.lastCell.isCellFalling) {
-      // console.time('moveCellDown')
       moveCellDown(tree, fieldCells)
-      // console.timeEnd('moveCellDown')
     } else {
-      // console.time('realiseGenome')
       realiseGenome(tree, fieldCells)
       // tree.createCell()
-      // console.timeEnd('realiseGenome')
     }
-    // console.time('refreshEnergy')
     refreshEnergy(tree, digitalTrees)
-    // console.timeEnd('refreshEnergy')
   }
 
   function realiseGenome(tree, fieldCells) {
@@ -183,7 +182,6 @@ export const useTrees = () => {
     console.log('increaseEnergy');
     let generatedEnergyByCell = 0
     tree.cells.forEach(cell => {
-      console.log('cell :>> ', cell);
       generatedEnergyByCell = generatedEnergyByCell + cell.generatedEnergyByCell()
     })
     tree.lastIncreaseEnergy = generatedEnergyByCell
@@ -245,8 +243,8 @@ export const useTrees = () => {
         tree.fieldCells,
         tree.logTextArray,
         tree.genome,
-        tree.headColor,
-        tree.bodyColor,
+        changeLittleBitColor(tree.headColor),
+        changeLittleBitColor(tree.bodyColor),
       )
       addCellFromParent(cell, newTree)
       mutateGenome(newTree)
@@ -263,8 +261,6 @@ export const useTrees = () => {
     // maybe something wring here
     newTree.cells[0].parentTree = newTree
     newTree.lastCell.parentTree = newTree
-    console.log('cell :>> ', cell.parentTree.id);
-    console.log('newTree :>> ', newTree.id);
   }
 
   function deleteEmptyTrees(digitalTrees) {
