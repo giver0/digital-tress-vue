@@ -14,11 +14,11 @@
 
 .blocks-field__column-index {
   display: flex;
-  margin-left: 20px;
+  margin-left: 14px;
 }
 
 .blocks-field__column-index div {
-  width: 33px;
+  width: 34px;
 }
 
 .testArray {

@@ -194,10 +194,10 @@ const filedBox = {
     } = useDebag()
 
     const logTextArray = ref([])
-    const fieldWidth = ref(10)
-    const fieldHeight = ref(5)
+    const fieldWidth = ref(30)
+    const fieldHeight = ref(10)
     const digitalTrees = ref([])
-    const treeCount = ref(3)
+    const treeCount = ref(5)
     const fieldCells = ref(new Array(fieldHeight.value).fill(0)
       .map(() => new Array(fieldWidth.value)))
 
