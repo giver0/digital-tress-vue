@@ -129,20 +129,6 @@ export const useTrees = () => {
     }
   }
 
-  function addCellFromParent(cell, newTree) {
-    newTree.cells.push(cell)
-    newTree.counterCell = 1
-    newTree.counterCellAll = 1
-    newTree.refreshLastCell()
-    newTree.lastCell.color = newTree.headColor
-    newTree.lastCell.genome = 0
-    // maybe something wring here
-    newTree.cells[0].parentTree = newTree
-    newTree.lastCell.parentTree = newTree
-    console.log('cell :>> ', cell.parentTree.id);
-    console.log('newTree :>> ', newTree.id);
-  }
-
   function createCellGenome(cell, newI, newJ, genomeToImplement, tree) {
     // console.log(`next i and j`, i, j);
     cell.setColor(tree.bodyColor)
@@ -265,6 +251,20 @@ export const useTrees = () => {
       addCellFromParent(cell, newTree)
       mutateGenome(newTree)
     })
+  }
+
+  function addCellFromParent(cell, newTree) {
+    newTree.cells.push(cell)
+    newTree.counterCell = 1
+    newTree.counterCellAll = 1
+    newTree.refreshLastCell()
+    newTree.lastCell.color = newTree.headColor
+    newTree.lastCell.genome = 0
+    // maybe something wring here
+    newTree.cells[0].parentTree = newTree
+    newTree.lastCell.parentTree = newTree
+    console.log('cell :>> ', cell.parentTree.id);
+    console.log('newTree :>> ', newTree.id);
   }
 
   function deleteEmptyTrees() {

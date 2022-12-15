@@ -189,6 +189,8 @@ const filedBox = {
     const {
       isAnyCellAtBottom,
       isCellsParentRight,
+      isInstanceOfCells,
+      isInstanceOfTree,
     } = useDebag()
 
     const logTextArray = ref([])
@@ -331,7 +333,9 @@ const filedBox = {
 
     function debugTree(tree) {
       isAnyCellAtBottom(tree, fieldCells.value.length, digitalTrees.value)
-      isCellsParentRight(tree, fieldCells.value.length, digitalTrees.value)
+      isInstanceOfCells(tree, digitalTrees.value)
+      isInstanceOfTree(tree, digitalTrees.value)
+      isCellsParentRight(tree, digitalTrees.value)
     }
 
     function deleteEmptyTrees() {
