@@ -48,11 +48,26 @@ export const useDebag = () => {
     }
   }
 
+  function isColorCorrect(tree, trees) {
+    if (tree.headColor.length !== 7 || tree.bodyColor.length !== 7) {
+      console.log('tree.headColor :>> ', tree.headColor);
+      console.log('tree.bodyColor :>> ', tree.bodyColor);
+      throw new Error("color should have 6 symbol", trees, tree);
+    }
+    tree.cells.forEach(cell => {
+      if (cell.color.length !== 7) {
+        console.log('cell.color :>> ', cell.color);
+        throw new Error("color should have 6 symbol", trees, tree);
+      }
+    })
+  }
+
   return {
     isAnyCellAtBottom,
     isCellsParentRight,
     isInstanceOfCells,
     isInstanceOfTree,
+    isColorCorrect,
   }
 }
 

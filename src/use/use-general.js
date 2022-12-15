@@ -20,7 +20,7 @@ export const useGeneral = () => {
 
   function generateRandomColor() {
     let randomColor = BASIC_COLOR
-    while (randomColor === BASIC_COLOR) {
+    while (randomColor === BASIC_COLOR || randomColor.length !== 7) {
       randomColor = '#'
       randomColor += Math.floor(Math.random() * 16777215).toString(16)
     }

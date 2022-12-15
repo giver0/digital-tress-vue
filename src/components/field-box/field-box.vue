@@ -192,6 +192,7 @@ const filedBox = {
       isCellsParentRight,
       isInstanceOfCells,
       isInstanceOfTree,
+      isColorCorrect,
     } = useDebag()
 
     const logTextArray = ref([])
@@ -326,7 +327,7 @@ const filedBox = {
 
     function chooseActionAtAllTree() {
       for (const tree of digitalTrees.value) {
-        chooseAction(tree, fieldCells.value)
+        chooseAction(tree, fieldCells.value, digitalTrees.value)
         debugTree(tree)
         // this.$forceUpdate()
       }
@@ -337,6 +338,7 @@ const filedBox = {
       isInstanceOfCells(tree, digitalTrees.value)
       isInstanceOfTree(tree, digitalTrees.value)
       isCellsParentRight(tree, digitalTrees.value)
+      isColorCorrect(tree, digitalTrees.value)
     }
 
     function deleteEmptyTrees() {

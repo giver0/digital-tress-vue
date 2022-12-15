@@ -7,7 +7,7 @@ import {
 import treeObject from '@/components/classes/treeObject'
 
 export const useTrees = () => {
-  function chooseAction(tree, fieldCells) {
+  function chooseAction(tree, fieldCells, digitalTrees) {
     if (tree.lastCell.isCellFalling) {
       // console.time('moveCellDown')
       moveCellDown(tree, fieldCells)
@@ -19,7 +19,7 @@ export const useTrees = () => {
       // console.timeEnd('realiseGenome')
     }
     // console.time('refreshEnergy')
-    refreshEnergy(tree)
+    refreshEnergy(tree, digitalTrees)
     // console.timeEnd('refreshEnergy')
   }
 
@@ -166,7 +166,7 @@ export const useTrees = () => {
     }
   }
 
-  function refreshEnergy(tree) {
+  function refreshEnergy(tree, digitalTrees) {
     console.log('refreshEnergy');
     // console.time('increaseEnergy')
     increaseEnergy(tree)
@@ -175,7 +175,7 @@ export const useTrees = () => {
     reduceEnergy(tree)
     // console.timeEnd('reduceEnergy')
     // console.time('checkIsEnergyOver')
-    checkIsEnergyOver(tree)
+    checkIsEnergyOver(tree, digitalTrees)
     // console.timeEnd('checkIsEnergyOver')
   }
 
@@ -196,7 +196,7 @@ export const useTrees = () => {
     tree.energy = tree.energy - tree.cells.length
   }
 
-  function checkIsEnergyOver(tree) {
+  function checkIsEnergyOver(tree, digitalTrees) {
     console.log('checkIsEnergyOver');
     const isEnergyOver = tree.energy < 0
     if (isEnergyOver) {
@@ -210,7 +210,7 @@ export const useTrees = () => {
         createTreeFromHeadCell(tree)
         tree.cells = []
       }
-      tree.deleteEmptyTrees()
+      deleteEmptyTrees(digitalTrees)
     }
   }
 
@@ -267,10 +267,10 @@ export const useTrees = () => {
     console.log('newTree :>> ', newTree.id);
   }
 
-  function deleteEmptyTrees() {
-    const treeIndex = this.digitalTrees.findIndex(tree => tree.cells.length === 0)
+  function deleteEmptyTrees(digitalTrees) {
+    const treeIndex = digitalTrees.findIndex(tree => tree.cells.length === 0)
     if (treeIndex !== -1) {
-      this.digitalTrees.splice(treeIndex, 1)
+      digitalTrees.splice(treeIndex, 1)
     }
   }
 
