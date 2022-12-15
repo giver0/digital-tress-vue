@@ -168,6 +168,7 @@ import CellsField from '../cells-field'
 import CycleCounter from '../cycle-counter'
 import LogBox from '../log-box'
 import useTrees from '@/use/use-trees'
+import useDebag from '@/use/use-debag'
 
 const filedBox = {
   name: 'fieldBox',
@@ -185,11 +186,16 @@ const filedBox = {
       allCellToField,
       deleteAllCells,
     } = useTrees()
+    const {
+      isAnyCellAtBottom,
+      isCellsParentRight,
+    } = useDebag()
+
     const logTextArray = ref([])
-    const fieldWidth = ref(30)
-    const fieldHeight = ref(10)
+    const fieldWidth = ref(10)
+    const fieldHeight = ref(5)
     const digitalTrees = ref([])
-    const treeCount = ref(5)
+    const treeCount = ref(3)
     const fieldCells = ref(new Array(fieldHeight.value).fill(0)
       .map(() => new Array(fieldWidth.value)))
 
@@ -318,8 +324,14 @@ const filedBox = {
     function chooseActionAtAllTree() {
       for (const tree of digitalTrees.value) {
         chooseAction(tree, fieldCells.value)
+        debugTree(tree)
         // this.$forceUpdate()
       }
+    }
+
+    function debugTree(tree) {
+      isAnyCellAtBottom(tree, fieldCells.value.length, digitalTrees.value)
+      isCellsParentRight(tree, fieldCells.value.length, digitalTrees.value)
     }
 
     function deleteEmptyTrees() {

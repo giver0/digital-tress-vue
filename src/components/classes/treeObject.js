@@ -213,6 +213,9 @@ export default class treeObject {
 
     this.counterCellAll = this.counterCellAll + 1
     this.counterCell = this.counterCell + 1
+    if (this.counterCellAll < 0) {
+      throw new Error("no cell counterCellAll");
+    }
     nextCell.indexInTree = this.counterCellAll
     nextCell.parentTree = this
     this.cells.push(nextCell)

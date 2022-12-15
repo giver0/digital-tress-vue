@@ -1,7 +1,7 @@
 <template>
   <div class="blocks-field">
     <div class="blocks-field__column-index">
-      <div v-for="(cellRaw, index) in fieldCells[0]">
+      <div v-for="(cellRaw, index) in fieldCells[0]" :key="index">
         {{index}}
       </div>
     </div>
@@ -10,9 +10,9 @@
       :key="index"
       class="testArray"
     >
-    <div class="blocks-field__row-index">
-      {{index}}
-    </div>
+      <div class="blocks-field__row-index">
+        {{index}}
+      </div>
       <div
         v-for="cell in cellRaw"
         :key="cell.id"

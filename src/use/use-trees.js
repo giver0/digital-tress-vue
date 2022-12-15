@@ -21,10 +21,10 @@ export const useTrees = () => {
     // console.time('refreshEnergy')
     refreshEnergy(tree)
     // console.timeEnd('refreshEnergy')
-    isAnyCellAtBottom(tree, fieldCells.length)
   }
 
   function realiseGenome(tree, fieldCells) {
+    console.log('realiseGenome')
     if (!fieldCells) {
       console.log('tree :>> ', tree);
       throw new Error("fieldCells should be defined");
@@ -90,6 +90,7 @@ export const useTrees = () => {
   }
 
   function moveCellDown(tree, fieldCells) {
+    console.log('moveCellDown')
     // console.log('i:', tree.i, 'j:', tree.j, 'Tree id:', tree.parentTree);
     // console.log('field move', tree.fieldCells[tree.j][tree.i]);
     if (tree.lastCell.j === tree.fieldCells.length - 1) {
@@ -135,7 +136,11 @@ export const useTrees = () => {
     newTree.refreshLastCell()
     newTree.lastCell.color = newTree.headColor
     newTree.lastCell.genome = 0
+    // maybe something wring here
+    newTree.cells[0].parentTree = newTree
     newTree.lastCell.parentTree = newTree
+    console.log('cell :>> ', cell.parentTree.id);
+    console.log('newTree :>> ', newTree.id);
   }
 
   function createCellGenome(cell, newI, newJ, genomeToImplement, tree) {
@@ -176,6 +181,7 @@ export const useTrees = () => {
   }
 
   function refreshEnergy(tree) {
+    console.log('refreshEnergy');
     // console.time('increaseEnergy')
     increaseEnergy(tree)
     // console.timeEnd('increaseEnergy')
@@ -188,8 +194,10 @@ export const useTrees = () => {
   }
 
   function increaseEnergy(tree) {
+    console.log('increaseEnergy');
     let generatedEnergyByCell = 0
     tree.cells.forEach(cell => {
+      console.log('cell :>> ', cell);
       generatedEnergyByCell = generatedEnergyByCell + cell.generatedEnergyByCell()
     })
     tree.lastIncreaseEnergy = generatedEnergyByCell
@@ -197,21 +205,26 @@ export const useTrees = () => {
   }
 
   function reduceEnergy(tree) {
+    console.log('reduceEnergy');
     tree.lastReduceEnergy = tree.cells.length
     tree.energy = tree.energy - tree.cells.length
   }
 
   function checkIsEnergyOver(tree) {
+    console.log('checkIsEnergyOver');
     const isEnergyOver = tree.energy < 0
     if (isEnergyOver) {
       if (tree.cells.length <= 1) {
+        console.log('1 cell');
         allCellToField(tree)
         deleteAllCells(tree)
       } else {
+        console.log('more then 1 cell');
         deleteTreeBody(tree)
         createTreeFromHeadCell(tree)
+        tree.cells = []
       }
-      // tree.deleteEmptyTrees()
+      tree.deleteEmptyTrees()
     }
   }
 
@@ -254,6 +267,13 @@ export const useTrees = () => {
     })
   }
 
+  function deleteEmptyTrees() {
+    const treeIndex = this.digitalTrees.findIndex(tree => tree.cells.length === 0)
+    if (treeIndex !== -1) {
+      this.digitalTrees.splice(treeIndex, 1)
+    }
+  }
+
   function mutateGenome(tree) {
     const randomGenomRaw = tree.getRandomInt(0, GENOME_COUNT)
     const randomGenDirection = () => {
@@ -271,19 +291,6 @@ export const useTrees = () => {
         tree.genome[randomGenomRaw].rightGen = tree.getRandomInt(0, GENOME_MAX_VALUE)
       }
     }
-  }
-
-  function isAnyCellAtBottom(tree, fieldCellsHeight) {
-    let isAtBottom = false
-    tree.cells.forEach(cell => {
-      if (cell.j === fieldCellsHeight - 1 && cell.isCellFalling === false) {
-        isAtBottom = true
-      }
-      if (!isAtBottom) {
-        console.log('tree :>> ', tree);
-        throw new Error("no cell on bottom");
-      }
-    })
   }
 
   return {
