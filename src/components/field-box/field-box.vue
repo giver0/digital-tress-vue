@@ -169,6 +169,7 @@ import CycleCounter from '../cycle-counter'
 import LogBox from '../log-box'
 import useTrees from '@/use/use-trees'
 import useDebag from '@/use/use-debag'
+import useConsole from '@/use/use-console'
 
 const filedBox = {
   name: 'fieldBox',
@@ -194,6 +195,10 @@ const filedBox = {
       isInstanceOfTree,
       isColorCorrect,
     } = useDebag()
+    const {
+      startCycleTime,
+      stopCycleTime,
+    } = useConsole()
 
     const logTextArray = ref([])
     const fieldWidth = ref(30)
@@ -301,7 +306,7 @@ const filedBox = {
 
     async function cycle() {
       while (isAnyTreesCanMove.value) {
-        console.time('startCycle')
+        startCycleTime()
         await sleep(timeRange.value)
         // console.log('======= new turn =======')
         chooseActionAtAllTree()
@@ -313,7 +318,8 @@ const filedBox = {
           return
         }
         // console.log('digitalTrees.value.length :>> ', digitalTrees.value);
-        console.timeEnd('startCycle')
+        stopCycleTime()
+        // console.timeEnd('startCycle')
       }
       fullCycleCounter.value += 1
       logNewFullCycle()

@@ -6,11 +6,15 @@ import {
 } from '@/constant/basic'
 import treeObject from '@/components/classes/treeObject'
 import useGeneral from '@/use/use-general'
+import useConsole from '@/use/use-console'
 
 export const useTrees = () => {
   const {
     changeLittleBitColor,
   } = useGeneral()
+  const {
+    consoleLog,
+  } = useConsole()
 
   function chooseAction(tree, fieldCells, digitalTrees) {
     if (tree.lastCell.isCellFalling) {
@@ -23,9 +27,9 @@ export const useTrees = () => {
   }
 
   function realiseGenome(tree, fieldCells) {
-    console.log('realiseGenome')
+    consoleLog('realiseGenome')
     if (!fieldCells) {
-      console.log('tree :>> ', tree);
+    console.log('tree :>> ', tree);
       throw new Error("fieldCells should be defined");
     }
     tree.cells.forEach(cell => {
@@ -63,7 +67,6 @@ export const useTrees = () => {
           newI = cell.i + 1
           newJ = cell.j
           if (isNextCellField(newI, newJ, fieldCells)) {
-            console.log('create genome');
             createCellGenome(cell, newI, newJ, cellGenome.rightGen, tree)
           }
         }
@@ -89,7 +92,7 @@ export const useTrees = () => {
   }
 
   function moveCellDown(tree, fieldCells) {
-    console.log('moveCellDown')
+    consoleLog('moveCellDown')
     // console.log('i:', tree.i, 'j:', tree.j, 'Tree id:', tree.parentTree);
     // console.log('field move', tree.fieldCells[tree.j][tree.i]);
     if (tree.lastCell.j === tree.fieldCells.length - 1) {
@@ -166,20 +169,14 @@ export const useTrees = () => {
   }
 
   function refreshEnergy(tree, digitalTrees) {
-    console.log('refreshEnergy');
-    // console.time('increaseEnergy')
+    consoleLog('refreshEnergy')
     increaseEnergy(tree)
-    // console.timeEnd('increaseEnergy')
-    // console.time('reduceEnergy')
     reduceEnergy(tree)
-    // console.timeEnd('reduceEnergy')
-    // console.time('checkIsEnergyOver')
     checkIsEnergyOver(tree, digitalTrees)
-    // console.timeEnd('checkIsEnergyOver')
   }
 
   function increaseEnergy(tree) {
-    console.log('increaseEnergy');
+    consoleLog('increaseEnergy')
     let generatedEnergyByCell = 0
     tree.cells.forEach(cell => {
       generatedEnergyByCell = generatedEnergyByCell + cell.generatedEnergyByCell()
@@ -189,21 +186,21 @@ export const useTrees = () => {
   }
 
   function reduceEnergy(tree) {
-    console.log('reduceEnergy');
+    consoleLog('reduceEnergy')
     tree.lastReduceEnergy = tree.cells.length
     tree.energy = tree.energy - tree.cells.length
   }
 
   function checkIsEnergyOver(tree, digitalTrees) {
-    console.log('checkIsEnergyOver');
+    consoleLog('checkIsEnergyOver')
     const isEnergyOver = tree.energy < 0
     if (isEnergyOver) {
       if (tree.cells.length <= 1) {
-        console.log('1 cell');
+        consoleLog('1 cell')
         allCellToField(tree)
         deleteAllCells(tree)
       } else {
-        console.log('more then 1 cell');
+        consoleLog('more then 1 cell')
         deleteTreeBody(tree)
         createTreeFromHeadCell(tree)
         tree.cells = []
