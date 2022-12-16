@@ -141,6 +141,7 @@ export const useTrees = () => {
     tree.counterCellAll = tree.counterCellAll + 1
     tree.counterCell = tree.counterCell + 1
     nextCell.indexInTree = tree.counterCellAll
+    console.log('nextCell.indexInTree :>> ', nextCell.indexInTree);
     nextCell.genome = genomeToImplement
     nextCell.parentTree = tree
     tree.cells.push(nextCell)
@@ -203,9 +204,8 @@ export const useTrees = () => {
         consoleLog('more then 1 cell')
         deleteTreeBody(tree)
         createTreeFromHeadCell(tree)
-        tree.cells = []
       }
-      deleteEmptyTrees(digitalTrees)
+      // deleteEmptyTrees(digitalTrees)
     }
   }
 
@@ -227,13 +227,11 @@ export const useTrees = () => {
       }
     })
     tree.cells = tree.cells.filter(cell => cell.color === tree.headColor)
-
-    tree.cells.forEach(cell => cell.cellFalling())
-
-    tree.counterCell = 1
   }
 
   function createTreeFromHeadCell(tree) {
+    tree.cells.forEach(cell => cell.cellFalling())
+    tree.counterCell = 1
     tree.cells.forEach(cell => {
       const newTree = new treeObject(
         tree.digitalTrees,
@@ -246,6 +244,7 @@ export const useTrees = () => {
       addCellFromParent(cell, newTree)
       mutateGenome(newTree)
     })
+    tree.cells = []
   }
 
   function addCellFromParent(cell, newTree) {

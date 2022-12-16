@@ -47,6 +47,7 @@ export default class treeObject {
     this.cells[0].setColor(this.headColor)
     this.cells[0].setCellType()
     this.cells[0].parentTree = this
+    console.log('this.cells :>> ', this.cells);
     this.cells[0].indexInTree = this.cells.length - 1
     this.cells[0].genome = 0
     this.refreshLastCell()

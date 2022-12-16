@@ -194,8 +194,10 @@ const filedBox = {
       isInstanceOfCells,
       isInstanceOfTree,
       isColorCorrect,
+      isCellHaveIndexOfTree,
     } = useDebag()
     const {
+      consoleLog,
       startCycleTime,
       stopCycleTime,
     } = useConsole()
@@ -340,6 +342,8 @@ const filedBox = {
     }
 
     function debugTree(tree) {
+      consoleLog('debugTree')
+      isCellHaveIndexOfTree(tree, digitalTrees.value)
       isAnyCellAtBottom(tree, fieldCells.value.length, digitalTrees.value)
       isInstanceOfCells(tree, digitalTrees.value)
       isInstanceOfTree(tree, digitalTrees.value)
@@ -348,6 +352,7 @@ const filedBox = {
     }
 
     function deleteEmptyTrees() {
+      consoleLog('deleteEmptyTrees')
       let badTreeCount = 0
       digitalTrees.value.forEach((tree, index) => {
         if (tree.cells.length === 0 || tree.energy < 0) {

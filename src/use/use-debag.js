@@ -2,10 +2,11 @@ import cellObject from '@/components/classes/cellObject'
 import treeObject from '@/components/classes/treeObject'
 
 export const useDebag = () => {
-  function throwError(erroMessage, trees, tree) {
+  function throwError(errorMessage, trees, tree) {
     console.log('trees :>> ', trees);
     console.log('tree :>> ', tree);
-    throw new Error(erroMessage);
+    console.log(errorMessage);
+    throw new Error(errorMessage);
   }
 
   function isAnyCellAtBottom(tree, fieldCellsHeight, trees) {
@@ -40,6 +41,15 @@ export const useDebag = () => {
     })
   }
 
+  function isCellHaveIndexOfTree(tree, trees) {
+    tree.cells.forEach(cell => {
+      const isHaveIndex = cell.indexInTree
+      if (cell.indexInTree === null) {
+        throwError('cell.parentTree !== tree.id', trees, tree)
+      }
+    })
+  }
+
   function isInstanceOfTree(tree, trees) {
     const isInstance = tree instanceof treeObject
     if (!isInstance) {
@@ -68,6 +78,7 @@ export const useDebag = () => {
     isInstanceOfCells,
     isInstanceOfTree,
     isColorCorrect,
+    isCellHaveIndexOfTree,
   }
 }
 
