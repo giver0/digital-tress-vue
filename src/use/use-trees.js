@@ -23,7 +23,7 @@ export const useTrees = () => {
       realiseGenome(tree, fieldCells)
       // tree.createCell()
     }
-    refreshEnergy(tree, digitalTrees)
+    refreshEnergy(tree, digitalTrees, fieldCells)
   }
 
   function realiseGenome(tree, fieldCells) {
@@ -46,28 +46,28 @@ export const useTrees = () => {
           newI = cell.i
           newJ = cell.j - 1
           if (isNextCellField(newI, newJ, fieldCells)) {
-            createCellGenome(cell, newI, newJ, cellGenome.upGen, tree)
+            createCellGenome(cell, newI, newJ, cellGenome.upGen, tree, fieldCells)
           }
         }
         if (cellGenome.downGen <= 15) {
           newI = cell.i
           newJ = cell.j + 1
           if (isNextCellField(newI, newJ, fieldCells)) {
-            createCellGenome(cell, newI, newJ, cellGenome.downGen, tree)
+            createCellGenome(cell, newI, newJ, cellGenome.downGen, tree, fieldCells)
           }
         }
         if (cellGenome.leftGen <= 15) {
           newI = cell.i - 1
           newJ = cell.j
           if (isNextCellField(newI, newJ, fieldCells)) {
-            createCellGenome(cell, newI, newJ, cellGenome.leftGen, tree)
+            createCellGenome(cell, newI, newJ, cellGenome.leftGen, tree, fieldCells)
           }
         }
         if (cellGenome.rightGen <= 15) {
           newI = cell.i + 1
           newJ = cell.j
           if (isNextCellField(newI, newJ, fieldCells)) {
-            createCellGenome(cell, newI, newJ, cellGenome.rightGen, tree)
+            createCellGenome(cell, newI, newJ, cellGenome.rightGen, tree, fieldCells)
           }
         }
       }
@@ -95,7 +95,7 @@ export const useTrees = () => {
     consoleLog('moveCellDown')
     // console.log('i:', tree.i, 'j:', tree.j, 'Tree id:', tree.parentTree);
     // console.log('field move', tree.fieldCells[tree.j][tree.i]);
-    if (tree.lastCell.j === tree.fieldCells.length - 1) {
+    if (tree.lastCell.j === fieldCells.length - 1) {
       // console.log('At bottom');
       tree.lastCell.isCellFalling = false
       tree.lastCell.isFreeCellsAround = true
@@ -104,7 +104,7 @@ export const useTrees = () => {
       // const nextJ = tree.j + 1
       // console.log('need move');
       tree.positionCurrent = tree.lastCell
-      tree.positionNext = tree.fieldCells[tree.positionCurrent.j + 1][tree.positionCurrent.i]
+      tree.positionNext = fieldCells[tree.positionCurrent.j + 1][tree.positionCurrent.i]
       // console.log('positionNext', tree.positionNext);
       const isBottomCellField = tree.positionNext.type === TYPE_FIELD
       // console.log('isBottomCellField', isBottomCellField);
@@ -131,10 +131,10 @@ export const useTrees = () => {
     }
   }
 
-  function createCellGenome(cell, newI, newJ, genomeToImplement, tree) {
+  function createCellGenome(cell, newI, newJ, genomeToImplement, tree, fieldCells) {
     // console.log(`next i and j`, i, j);
     cell.setColor(tree.bodyColor)
-    const nextCell = tree.fieldCells[newJ][newI]
+    const nextCell = fieldCells[newJ][newI]
     nextCell.setColor(tree.headColor)
     nextCell.setCellType()
 
@@ -169,11 +169,11 @@ export const useTrees = () => {
     }
   }
 
-  function refreshEnergy(tree, digitalTrees) {
+  function refreshEnergy(tree, digitalTrees, fieldCells) {
     consoleLog('refreshEnergy')
     increaseEnergy(tree)
     reduceEnergy(tree)
-    checkIsEnergyOver(tree, digitalTrees)
+    checkIsEnergyOver(tree, digitalTrees, fieldCells)
   }
 
   function increaseEnergy(tree) {
@@ -192,7 +192,7 @@ export const useTrees = () => {
     tree.energy = tree.energy - tree.cells.length
   }
 
-  function checkIsEnergyOver(tree, digitalTrees) {
+  function checkIsEnergyOver(tree, digitalTrees, fieldCells) {
     consoleLog('checkIsEnergyOver')
     const isEnergyOver = tree.energy < 0
     if (isEnergyOver) {
@@ -203,7 +203,7 @@ export const useTrees = () => {
       } else {
         consoleLog('more then 1 cell')
         deleteTreeBody(tree)
-        createTreeFromHeadCell(tree)
+        createTreeFromHeadCell(tree, fieldCells)
       }
       // deleteEmptyTrees(digitalTrees)
     }
@@ -229,13 +229,13 @@ export const useTrees = () => {
     tree.cells = tree.cells.filter(cell => cell.color === tree.headColor)
   }
 
-  function createTreeFromHeadCell(tree) {
+  function createTreeFromHeadCell(tree, fieldCells) {
     tree.cells.forEach(cell => cell.cellFalling())
     tree.counterCell = 1
     tree.cells.forEach(cell => {
       const newTree = new treeObject(
         tree.digitalTrees,
-        tree.fieldCells,
+        fieldCells,
         tree.logTextArray,
         tree.genome,
         changeLittleBitColor(tree.headColor),

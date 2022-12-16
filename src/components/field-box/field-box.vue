@@ -335,7 +335,7 @@ const filedBox = {
 
     function chooseActionAtAllTree() {
       for (const tree of digitalTrees.value) {
-        chooseAction(tree, fieldCells.value, digitalTrees.value)
+        chooseAction(tree, fieldCells.value, digitalTrees.value, fieldCells.value)
         debugTree(tree)
         // this.$forceUpdate()
       }
