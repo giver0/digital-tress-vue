@@ -2,7 +2,8 @@ import cellObject from '@/components/classes/cellObject'
 import treeObject from '@/components/classes/treeObject'
 
 export const useDebag = () => {
-  const isThrowError = false
+  const isThrowError = true
+
   function throwError(errorMessage, trees, tree) {
     console.log('trees :>> ', trees);
     console.log('tree :>> ', tree);

@@ -341,6 +341,55 @@ export const useTrees = () => {
     createCellLog(tree)
   }
 
+  // function whys don't used?
+  function createCell(tree, fieldCells) {
+    const freeCellsArray = freeCellsAround2(tree, fieldCells)
+    // console.log('freeCellsArray', freeCellsArray);
+
+    if (freeCellsArray.length === 0) {
+      tree.isFreeCellsAround = false
+      tree.lastCell.isCellFalling = true
+      if (tree.counterCell > 1) {
+        tree.deleteTreeBody()
+      }
+    } else {
+      const FreeCellCoordinate = chooseRandomPoint(freeCellsArray)
+      const [j, i] = FreeCellCoordinate
+      addNextCell(j, i, tree)
+    }
+  }
+
+  function freeCellsAround2(tree, fieldCells) {
+    // console.log('in free cell');
+    // console.log(tree.lastCell.i, ' ', tree.lastCell.j);
+    const freeFields = []
+    let i = tree.lastCell.i - 1
+    let j = tree.lastCell.j - 1
+    const iEnd = tree.lastCell.i + 2
+    const jEnd = tree.lastCell.j + 2
+    const fieldToCheck = []
+
+    for (let index = j; index < jEnd; index++) {
+
+    }
+
+    for (; j < jEnd; j++) {
+      for (i = tree.lastCell.i - 1; i < iEnd; i++) {
+        if (j in fieldCells && i in fieldCells[j]) {
+          if (fieldCells[j][i].type === TYPE_FIELD) {
+            freeFields.push([j, i])
+          }
+        }
+      }
+    }
+    return freeFields
+  }
+
+  function chooseRandomPoint(freeCells) {
+    const randomValue = getRandomInt(0, freeCells.length)
+    return freeCells[randomValue]
+  }
+
   return {
     treeReset,
     addFirstCell,
