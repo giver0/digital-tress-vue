@@ -171,6 +171,7 @@ import useTrees from '@/use/use-trees'
 import useDebag from '@/use/use-debag'
 import useConsole from '@/use/use-console'
 import useGeneral from '@/use/use-general'
+import useCell from '@/use/use-cell'
 
 const filedBox = {
   name: 'fieldBox',
@@ -207,6 +208,9 @@ const filedBox = {
     const {
       restartPage,
     } = useGeneral()
+    const {
+      setFieldType,
+    } = useCell()
 
     const logTextArray = ref([])
     const fieldWidth = ref(30)
@@ -378,7 +382,7 @@ const filedBox = {
           cell => {
             if (cell?.parentTree !== null) {
               if (cell?.parentTree.energy < 0) {
-                cell.setFieldType()
+                setFieldType(cell)
               }
             }
           },
@@ -433,7 +437,7 @@ const filedBox = {
     function cleanField() {
       for (const raw of fieldCells.value) {
         for (const cell of raw) {
-          cell.setFieldType()
+          setFieldType(cell)
         }
       }
     }
@@ -471,7 +475,7 @@ const filedBox = {
         await sleep(200)
       }
       for (const cell of digitalTrees.value[digitalTrees.value.length - 1].cells) {
-        cell.setFieldType()
+        setFieldType(cell)
         await sleep(100)
       }
       digitalTrees.value.pop()

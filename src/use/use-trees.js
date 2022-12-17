@@ -18,7 +18,12 @@ export const useTrees = () => {
     consoleLog,
   } = useConsole()
   const {
+    setCellType,
+    setCellColor,
+    setFieldType,
     createCellLog,
+    setCellFalling,
+    getGeneratedEnergyByCell,
   } = useCell()
 
   function chooseAction(tree, fieldCells, digitalTrees) {
@@ -131,17 +136,17 @@ export const useTrees = () => {
 
         tree.lastCell = tree.positionNext
         tree.cells[0] = tree.positionNext
-        tree.positionCurrent.setFieldType()
+        setFieldType(tree.positionCurrent)
       }
     }
   }
 
   function createCellGenome(cell, newI, newJ, genomeToImplement, tree, fieldCells) {
     // console.log(`next i and j`, i, j);
-    cell.setColor(tree.bodyColor)
+    setCellColor(tree.bodyColor, cell)
     const nextCell = fieldCells[newJ][newI]
-    nextCell.setColor(tree.headColor)
-    nextCell.setCellType()
+    setCellColor(tree.headColor, nextCell)
+    setCellType(nextCell)
 
     tree.counterCellAll = tree.counterCellAll + 1
     tree.counterCell = tree.counterCell + 1
@@ -160,16 +165,16 @@ export const useTrees = () => {
 
   function refreshEnergy(tree, digitalTrees, fieldCells) {
     consoleLog('refreshEnergy')
-    increaseEnergy(tree)
+    increaseEnergy(tree, fieldCells)
     reduceEnergy(tree)
     checkIsEnergyOver(tree, digitalTrees, fieldCells)
   }
 
-  function increaseEnergy(tree) {
+  function increaseEnergy(tree, fieldCells) {
     consoleLog('increaseEnergy')
     let generatedEnergyByCell = 0
     tree.cells.forEach(cell => {
-      generatedEnergyByCell = generatedEnergyByCell + cell.generatedEnergyByCell()
+      generatedEnergyByCell = generatedEnergyByCell + getGeneratedEnergyByCell(cell, fieldCells)
     })
     tree.lastIncreaseEnergy = generatedEnergyByCell
     tree.energy = tree.energy + generatedEnergyByCell
@@ -200,7 +205,10 @@ export const useTrees = () => {
   }
 
   function allCellToField(tree) {
-    tree.cells.forEach(cell => cell.setFieldType)
+    // is it correct?
+    tree.cells.forEach(cell => {
+      setFieldType(cell)
+    })
   }
 
   function deleteAllCells(tree) {
@@ -213,14 +221,14 @@ export const useTrees = () => {
 
     tree.cells.forEach(cell => {
       if (cell.color === tree.bodyColor) {
-        cell.setFieldType()
+        setFieldType(cell)
       }
     })
     tree.cells = tree.cells.filter(cell => cell.color === tree.headColor)
   }
 
   function createTreeFromHeadCell(tree, fieldCells) {
-    tree.cells.forEach(cell => cell.cellFalling())
+    tree.cells.forEach(cell => setCellFalling(cell))
     tree.counterCell = 1
     tree.cells.forEach(cell => {
       const newTree = new treeObject(
@@ -290,8 +298,8 @@ export const useTrees = () => {
     const firstCell = randomCellFloor(tree, fieldCells)
     tree.cells.push(firstCell)
 
-    tree.cells[0].setColor(tree.headColor)
-    tree.cells[0].setCellType()
+    setCellColor(tree.headColor, tree.cells[0])
+    setCellType(tree.cells[0])
     tree.cells[0].parentTree = tree
     console.log('tree.cells :>> ', tree.cells);
     tree.cells[0].indexInTree = tree.cells.length - 1
@@ -323,10 +331,10 @@ export const useTrees = () => {
 
   function addNextCell(j, i, tree) {
     // console.log(`next i and j`, i, j);
-    tree.lastCell.setColor(tree.bodyColor)
+    setCellColor(tree.bodyColor, tree.lastCell)
     const nextCell = tree.fieldCells[j][i]
-    nextCell.setColor(tree.headColor)
-    nextCell.setCellType()
+    setCellColor(tree.headColor, nextCell)
+    setCellType(nextCell)
 
     tree.counterCellAll = tree.counterCellAll + 1
     tree.counterCell = tree.counterCell + 1
