@@ -170,6 +170,7 @@ import LogBox from '../log-box'
 import useTrees from '@/use/use-trees'
 import useDebag from '@/use/use-debag'
 import useConsole from '@/use/use-console'
+import useGeneral from '@/use/use-general'
 
 const filedBox = {
   name: 'fieldBox',
@@ -201,6 +202,9 @@ const filedBox = {
       startCycleTime,
       stopCycleTime,
     } = useConsole()
+    const {
+      restartPage,
+    } = useGeneral()
 
     const logTextArray = ref([])
     const fieldWidth = ref(30)
@@ -220,6 +224,10 @@ const filedBox = {
     const isGamePausedAtMoment = ref(false)
     const isCanChangeColor = ref(true)
     const displayCell = ref({})
+
+    const cellsAtLastCycle = ref(0)
+    const cellsAtCurrentCycle = ref(0)
+    const cycleNothingChanges = ref(0)
 
     // const isAnyTreesCanMove = computed(() => {
     //   const isFreeCellsArray = digitalTrees.value
@@ -313,6 +321,7 @@ const filedBox = {
         // console.log('======= new turn =======')
         chooseActionAtAllTree()
         deleteEmptyTrees()
+        checkIsNothingChange()
         // console.log('tree in main cycle', digitalTrees.value)
         cycleCounter.value += 1
         if (isGamePaused.value) {
@@ -373,6 +382,27 @@ const filedBox = {
           },
         ),
       )
+    }
+
+    function calcCellsAtLastCycle() {
+      let cellCount = 0
+      digitalTrees.value.forEach(tree => {
+        tree.cells.forEach(cell => {
+          cellCount += 1
+        })
+      })
+      cellsAtCurrentCycle.value = cellCount
+    }
+
+    function checkIsNothingChange() {
+      calcCellsAtLastCycle()
+      if (cellsAtCurrentCycle.value !== cellsAtCurrentCycle.value) {
+        cycleNothingChanges += 1
+      }
+      if (cycleNothingChanges.value > 100) {
+        restartPage()
+      }
+      cellsAtCurrentCycle.value = cellsAtCurrentCycle.value
     }
 
     function logNewFullCycle() {

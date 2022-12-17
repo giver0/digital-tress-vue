@@ -1,5 +1,5 @@
 export const useConsole = () => {
-  const isActiveConsole = true
+  const isActiveConsole = false
   const isShowCycleTime = false
 
   function consoleLog(message, object = null) {

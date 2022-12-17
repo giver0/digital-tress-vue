@@ -36,6 +36,7 @@
 <script>
 
 import { ref } from 'vue'
+import useGeneral from '@/use/use-general'
 
 export default ({
   name: 'ControlButton',
@@ -48,11 +49,11 @@ export default ({
     },
   },
   setup(props, { emit }) {
-    const colorButtonStyle = ref({})
+    const {
+      restartPage,
+    } = useGeneral()
 
-    function restartPage() {
-      location.reload()
-    }
+    const colorButtonStyle = ref({})
 
     function pauseGame() {
       emit('onPauseGame')

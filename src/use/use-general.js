@@ -53,7 +53,12 @@ export const useGeneral = () => {
     return newColor
   }
 
+  function restartPage() {
+    location.reload()
+  }
+
   return {
+    restartPage,
     generateID,
     generateRandomColor,
     changeLittleBitColor,
