@@ -396,13 +396,20 @@ const filedBox = {
 
     function checkIsNothingChange() {
       calcCellsAtLastCycle()
-      if (cellsAtCurrentCycle.value !== cellsAtCurrentCycle.value) {
-        cycleNothingChanges += 1
+      // console.log('cellsAtCurrentCycle.value :>> ', cellsAtCurrentCycle.value);
+      // console.log('cellsAtLastCycle.value :>> ', cellsAtLastCycle.value);
+      if (cellsAtCurrentCycle.value === cellsAtLastCycle.value) {
+        cycleNothingChanges.value += 1
+      } else {
+        cycleNothingChanges.value = 0
       }
+      console.log('cycleNothingChanges.value  :>> ', cycleNothingChanges.value);
       if (cycleNothingChanges.value > 100) {
+        console.log('cycleNothingChanges.value  :>> ', cycleNothingChanges.value);
+        pauseGame()
         restartPage()
       }
-      cellsAtCurrentCycle.value = cellsAtCurrentCycle.value
+      cellsAtLastCycle.value = cellsAtCurrentCycle.value
     }
 
     function logNewFullCycle() {

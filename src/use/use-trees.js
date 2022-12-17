@@ -141,7 +141,7 @@ export const useTrees = () => {
     tree.counterCellAll = tree.counterCellAll + 1
     tree.counterCell = tree.counterCell + 1
     nextCell.indexInTree = tree.counterCellAll
-    console.log('nextCell.indexInTree :>> ', nextCell.indexInTree);
+    consoleLog('nextCell.indexInTree :>> ', nextCell.indexInTree)
     nextCell.genome = genomeToImplement
     nextCell.parentTree = tree
     tree.cells.push(nextCell)
