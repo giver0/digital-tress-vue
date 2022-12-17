@@ -7,14 +7,19 @@ import {
 import treeObject from '@/components/classes/treeObject'
 import useGeneral from '@/use/use-general'
 import useConsole from '@/use/use-console'
+import useCell from '@/use/use-cell'
 
 export const useTrees = () => {
   const {
+    getRandomInt,
     changeLittleBitColor,
   } = useGeneral()
   const {
     consoleLog,
   } = useConsole()
+  const {
+    createCellLog,
+  } = useCell()
 
   function chooseAction(tree, fieldCells, digitalTrees) {
     if (tree.lastCell.isCellFalling) {
@@ -94,7 +99,7 @@ export const useTrees = () => {
   function moveCellDown(tree, fieldCells) {
     consoleLog('moveCellDown')
     // console.log('i:', tree.i, 'j:', tree.j, 'Tree id:', tree.parentTree);
-    // console.log('field move', tree.fieldCells[tree.j][tree.i]);
+    // console.log('field move', fieldCells[tree.j][tree.i]);
     if (tree.lastCell.j === fieldCells.length - 1) {
       // console.log('At bottom');
       tree.lastCell.isCellFalling = false
@@ -153,22 +158,6 @@ export const useTrees = () => {
     tree.lastCell = tree.cells[tree.cells.length - 1]
   }
 
-  function createCellLog(tree) {
-    // let logText = "Create cell column:" + tree.lastCell.i + ", raw:" + tree.lastCell.j +", TreeID: "+tree.id
-    const logObject = {
-      i: tree.lastCell.i,
-      j: tree.lastCell.j,
-      id: tree.id,
-      type: 'create',
-      headColor: tree.headColor,
-      bodyColor: tree.bodyColor,
-    }
-    tree.logTextArray.push(logObject)
-    if (tree.logTextArray.length > 50) {
-      tree.logTextArray.shift()
-    }
-  }
-
   function refreshEnergy(tree, digitalTrees, fieldCells) {
     consoleLog('refreshEnergy')
     increaseEnergy(tree)
@@ -205,6 +194,7 @@ export const useTrees = () => {
         deleteTreeBody(tree)
         createTreeFromHeadCell(tree, fieldCells)
       }
+      // isIt work correct?
       // deleteEmptyTrees(digitalTrees)
     }
   }
@@ -251,7 +241,7 @@ export const useTrees = () => {
     newTree.cells.push(cell)
     newTree.counterCell = 1
     newTree.counterCellAll = 1
-    newTree.refreshLastCell()
+    refreshLastCell(newTree)
     newTree.lastCell.color = newTree.headColor
     newTree.lastCell.genome = 0
     // maybe something wring here
@@ -267,20 +257,20 @@ export const useTrees = () => {
   }
 
   function mutateGenome(tree) {
-    const randomGenomRaw = tree.getRandomInt(0, GENOME_COUNT)
+    const randomGenomRaw = getRandomInt(0, GENOME_COUNT)
     const randomGenDirection = () => {
-      const randomInt = tree.getRandomInt(0, 4)
+      const randomInt = getRandomInt(0, 4)
       if (randomInt === 0) {
-        tree.genome[randomGenomRaw].upGen = tree.getRandomInt(0, GENOME_MAX_VALUE)
+        tree.genome[randomGenomRaw].upGen = getRandomInt(0, GENOME_MAX_VALUE)
       }
       if (randomInt === 1) {
-        tree.genome[randomGenomRaw].downGen = tree.getRandomInt(0, GENOME_MAX_VALUE)
+        tree.genome[randomGenomRaw].downGen = getRandomInt(0, GENOME_MAX_VALUE)
       }
       if (randomInt === 2) {
-        tree.genome[randomGenomRaw].leftGen = tree.getRandomInt(0, GENOME_MAX_VALUE)
+        tree.genome[randomGenomRaw].leftGen = getRandomInt(0, GENOME_MAX_VALUE)
       }
       if (randomInt === 3) {
-        tree.genome[randomGenomRaw].rightGen = tree.getRandomInt(0, GENOME_MAX_VALUE)
+        tree.genome[randomGenomRaw].rightGen = getRandomInt(0, GENOME_MAX_VALUE)
       }
     }
   }
@@ -290,10 +280,74 @@ export const useTrees = () => {
     tree.bodyColor = tree.generateRandomColor()
   }
 
+  function treeReset(tree) {
+    tree.isFreeCellsAround = true
+    tree.cells = []
+    tree.lastCell = null
+  }
+
+  function addFirstCell(tree, fieldCells) {
+    const firstCell = randomCellFloor(tree, fieldCells)
+    tree.cells.push(firstCell)
+
+    tree.cells[0].setColor(tree.headColor)
+    tree.cells[0].setCellType()
+    tree.cells[0].parentTree = tree
+    console.log('tree.cells :>> ', tree.cells);
+    tree.cells[0].indexInTree = tree.cells.length - 1
+    tree.cells[0].genome = 0
+    refreshLastCell(tree)
+    createCellLog(tree)
+  }
+
+  function randomCellFloor(tree, fieldCells) {
+    let whileCounter = 0
+    let j
+    let i
+    while (whileCounter < fieldCells[0].length * 2) {
+      j = fieldCells.length - 1
+      i = getRandomInt(0, fieldCells[0].length)
+      // logSomeText("In chooseRandomStartCell()")
+      console.log('In chooseRandomStartCell()')
+
+      if (fieldCells[j][i].type === TYPE_FIELD) {
+        return fieldCells[j][i]
+      }
+      whileCounter += 1
+   }
+  }
+
+  function refreshLastCell(tree) {
+    tree.lastCell = tree.cells[tree.cells.length - 1]
+  }
+
+  function addNextCell(j, i, tree) {
+    // console.log(`next i and j`, i, j);
+    tree.lastCell.setColor(tree.bodyColor)
+    const nextCell = tree.fieldCells[j][i]
+    nextCell.setColor(tree.headColor)
+    nextCell.setCellType()
+
+    tree.counterCellAll = tree.counterCellAll + 1
+    tree.counterCell = tree.counterCell + 1
+    if (tree.counterCellAll < 0) {
+      throw new Error("no cell counterCellAll");
+    }
+    nextCell.indexInTree = tree.counterCellAll
+    nextCell.parentTree = tree
+    tree.cells.push(nextCell)
+    refreshLastCell(tree)
+    // tree.nextCell = nextCell
+    createCellLog(tree)
+  }
+
   return {
+    treeReset,
+    addFirstCell,
     chooseAction,
     allCellToField,
     deleteAllCells,
+    refreshLastCell,
     changeRandomColor,
   }
 }

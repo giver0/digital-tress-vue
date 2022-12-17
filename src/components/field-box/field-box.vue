@@ -184,6 +184,8 @@ const filedBox = {
   },
   setup() {
     const {
+      treeReset,
+      addFirstCell,
       chooseAction,
       allCellToField,
       deleteAllCells,
@@ -297,7 +299,7 @@ const filedBox = {
 
     function addFirstCellTrees() {
       for (const tree of digitalTrees.value) {
-        tree.addFirstCell()
+        addFirstCell(tree, fieldCells.value)
       }
     }
 
@@ -417,7 +419,7 @@ const filedBox = {
       console.log('CleanField')
 
       for (const tree of digitalTrees.value) {
-        tree.reset()
+        treeReset(tree)
       }
 
       if (isCanChangeColor.value) {
