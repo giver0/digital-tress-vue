@@ -8,6 +8,7 @@ import treeObject from '@/components/classes/treeObject'
 import useGeneral from '@/use/use-general'
 import useConsole from '@/use/use-console'
 import useCell from '@/use/use-cell'
+import useDebag from './use-debag'
 
 export const useTrees = () => {
   const {
@@ -25,6 +26,11 @@ export const useTrees = () => {
     setCellFalling,
     getGeneratedEnergyByCell,
   } = useCell()
+  const {
+    isCellsParentRight,
+    isCellsParenNotNull,
+    isCellsIndexInTreeNotNull,
+  } = useDebag()
 
   function chooseAction(tree, fieldCells, digitalTrees) {
     if (tree.lastCell.isCellFalling) {
@@ -82,6 +88,7 @@ export const useTrees = () => {
         }
       }
     })
+    isCellsParentRight(tree)
   }
 
   function isNextCellField(newI, newJ, fieldCells) {
@@ -133,9 +140,11 @@ export const useTrees = () => {
         keyToCopy.forEach(key => {
           tree.positionNext[key] = tree.positionCurrent[key]
         })
+        isCellsIndexInTreeNotNull(tree.positionNext)
 
         tree.lastCell = tree.positionNext
         tree.cells[0] = tree.positionNext
+        isCellsParentRight(tree)
         setFieldType(tree.positionCurrent)
       }
     }
@@ -151,10 +160,13 @@ export const useTrees = () => {
     tree.counterCellAll = tree.counterCellAll + 1
     tree.counterCell = tree.counterCell + 1
     nextCell.indexInTree = tree.counterCellAll
+    isCellsIndexInTreeNotNull(nextCell)
     consoleLog('nextCell.indexInTree :>> ', nextCell.indexInTree)
     nextCell.genome = genomeToImplement
     nextCell.parentTree = tree
+    isCellsParenNotNull(nextCell)
     tree.cells.push(nextCell)
+    isCellsParentRight(tree)
     refreshLastCell(tree)
     createCellLog(tree)
   }
@@ -176,6 +188,7 @@ export const useTrees = () => {
     tree.cells.forEach(cell => {
       generatedEnergyByCell = generatedEnergyByCell + getGeneratedEnergyByCell(cell, fieldCells)
     })
+    isCellsParentRight(tree)
     tree.lastIncreaseEnergy = generatedEnergyByCell
     tree.energy = tree.energy + generatedEnergyByCell
   }
@@ -209,6 +222,7 @@ export const useTrees = () => {
     tree.cells.forEach(cell => {
       setFieldType(cell)
     })
+    isCellsParentRight(tree)
   }
 
   function deleteAllCells(tree) {
@@ -224,11 +238,14 @@ export const useTrees = () => {
         setFieldType(cell)
       }
     })
+    // isCellsParentRight(tree)
     tree.cells = tree.cells.filter(cell => cell.color === tree.headColor)
+    // isCellsParentRight(tree)
   }
 
   function createTreeFromHeadCell(tree, fieldCells) {
     tree.cells.forEach(cell => setCellFalling(cell))
+    isCellsParentRight(tree)
     tree.counterCell = 1
     tree.cells.forEach(cell => {
       const newTree = new treeObject(
@@ -242,6 +259,7 @@ export const useTrees = () => {
       addCellFromParent(cell, newTree)
       mutateGenome(newTree)
     })
+    isCellsParentRight(tree)
     tree.cells = []
   }
 
@@ -254,7 +272,9 @@ export const useTrees = () => {
     newTree.lastCell.genome = 0
     // maybe something wring here
     newTree.cells[0].parentTree = newTree
+    isCellsParenNotNull(newTree.cells[0])
     newTree.lastCell.parentTree = newTree
+    isCellsParenNotNull(newTree.lastCell)
   }
 
   function deleteEmptyTrees(digitalTrees) {
@@ -297,12 +317,14 @@ export const useTrees = () => {
   function addFirstCell(tree, fieldCells) {
     const firstCell = randomCellFloor(tree, fieldCells)
     tree.cells.push(firstCell)
+    // isCellsParentRight(tree)
 
     setCellColor(tree.headColor, tree.cells[0])
     setCellType(tree.cells[0])
     tree.cells[0].parentTree = tree
-    console.log('tree.cells :>> ', tree.cells);
+    isCellsParenNotNull(tree.cells[0])
     tree.cells[0].indexInTree = tree.cells.length - 1
+    isCellsIndexInTreeNotNull(tree.cells[0])
     tree.cells[0].genome = 0
     refreshLastCell(tree)
     createCellLog(tree)
@@ -329,10 +351,10 @@ export const useTrees = () => {
     tree.lastCell = tree.cells[tree.cells.length - 1]
   }
 
-  function addNextCell(j, i, tree) {
+  function addNextCell(j, i, tree, fieldCells) {
     // console.log(`next i and j`, i, j);
     setCellColor(tree.bodyColor, tree.lastCell)
-    const nextCell = tree.fieldCells[j][i]
+    const nextCell = fieldCells[j][i]
     setCellColor(tree.headColor, nextCell)
     setCellType(nextCell)
 
@@ -342,8 +364,11 @@ export const useTrees = () => {
       throw new Error("no cell counterCellAll");
     }
     nextCell.indexInTree = tree.counterCellAll
+    isCellsIndexInTreeNotNull(nextCell)
     nextCell.parentTree = tree
+    isCellsParenNotNull(nextCell.parentTree)
     tree.cells.push(nextCell)
+    isCellsParentRight(tree)
     refreshLastCell(tree)
     // tree.nextCell = nextCell
     createCellLog(tree)
@@ -363,7 +388,7 @@ export const useTrees = () => {
     } else {
       const FreeCellCoordinate = chooseRandomPoint(freeCellsArray)
       const [j, i] = FreeCellCoordinate
-      addNextCell(j, i, tree)
+      addNextCell(j, i, tree, fieldCells)
     }
   }
 
