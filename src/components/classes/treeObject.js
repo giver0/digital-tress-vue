@@ -15,14 +15,12 @@ const {
 
 export default class treeObject {
   constructor(
-    digitalTrees,
     fieldCells,
     logTextArray,
     genome = generateGenome(),
     headColor = generateRandomColor(),
     bodyColor = generateRandomColor(),
   ) {
-    this.digitalTrees = digitalTrees
     this.fieldCells = fieldCells
     this.logTextArray = logTextArray
     this.id = generateID()
@@ -39,7 +37,6 @@ export default class treeObject {
     this.genome = genome
     this.lastIncreaseEnergy = 0
     this.lastReduceEnergy = 0
-    digitalTrees.push(this)
   }
 
   // don't used

@@ -21,7 +21,7 @@ export const useTrees = () => {
   const {
     setCellType,
     setCellColor,
-    setFieldType,
+    setCellFieldType,
     createCellLog,
     setCellFalling,
     getGeneratedEnergyByCell,
@@ -39,7 +39,7 @@ export const useTrees = () => {
       realiseGenome(tree, fieldCells)
       // tree.createCell()
     }
-    refreshEnergy(tree, digitalTrees, fieldCells)
+    refreshEnergy(tree, digitalTrees, fieldCells, digitalTrees)
   }
 
   function realiseGenome(tree, fieldCells) {
@@ -112,42 +112,56 @@ export const useTrees = () => {
     consoleLog('moveCellDown')
     // console.log('i:', tree.i, 'j:', tree.j, 'Tree id:', tree.parentTree);
     // console.log('field move', fieldCells[tree.j][tree.i]);
-    if (tree.lastCell.j === fieldCells.length - 1) {
+    const isCellAtBottom = tree.lastCell.j === fieldCells.length - 1
+    if (isCellAtBottom) {
       // console.log('At bottom');
       tree.lastCell.isCellFalling = false
       tree.lastCell.isFreeCellsAround = true
       realiseGenome(tree, fieldCells)
     } else {
+      consoleLog('moveCellDown else')
       // const nextJ = tree.j + 1
       // console.log('need move');
       tree.positionCurrent = tree.lastCell
       tree.positionNext = fieldCells[tree.positionCurrent.j + 1][tree.positionCurrent.i]
       // console.log('positionNext', tree.positionNext);
-      const isBottomCellField = tree.positionNext.type === TYPE_FIELD
+      const isBottomCellField = tree.positionNext.type === TYPE_FIELD && tree.positionNext.parentTree === null
+      if (tree.positionNext.type === TYPE_FIELD && tree.positionNext.parentTree !== null) {
+        console.log('tree.positionNext.parentTree :>> ', tree.positionNext);
+        throw new Error('TYPE_FIELD have parent tree')
+      }
       // console.log('isBottomCellField', isBottomCellField);
       if (isBottomCellField) {
+        consoleLog('isBottomCellField')
         // console.log('moveTo');
         // console.log(tree);
-
-        const keyToCopy = [
-          'type',
-          'color',
-          'parentTree',
-          'isCellFalling',
-          'indexInTree',
-        ]
-
-        keyToCopy.forEach(key => {
-          tree.positionNext[key] = tree.positionCurrent[key]
-        })
-        isCellsIndexInTreeNotNull(tree.positionNext)
-
+        copyCellToNextPosition(tree)
+        console.log('tree.positionNext :>> ', tree.positionNext);
+        console.log('tree.positionNext :>> ', tree.id, tree.positionNext.parentTree.id);
         tree.lastCell = tree.positionNext
         tree.cells[0] = tree.positionNext
+        setCellFieldType(tree.positionCurrent)
         isCellsParentRight(tree)
-        setFieldType(tree.positionCurrent)
       }
     }
+  }
+
+  function copyCellToNextPosition(tree) {
+    console.log('tree.positionNext.type :>> ', tree.positionNext.type);
+    const keyToCopy = [
+      'type',
+      'color',
+      'parentTree',
+      'isCellFalling',
+      'indexInTree',
+    ]
+
+    console.log('tree.positionNext :>> ', tree.positionNext);
+    console.log('tree.positionCurrent :>> ', tree.positionCurrent);
+    keyToCopy.forEach(key => {
+      tree.positionNext[key] = tree.positionCurrent[key]
+    })
+    isCellsIndexInTreeNotNull(tree.positionNext)
   }
 
   function createCellGenome(cell, newI, newJ, genomeToImplement, tree, fieldCells) {
@@ -210,7 +224,7 @@ export const useTrees = () => {
       } else {
         consoleLog('more then 1 cell')
         deleteTreeBody(tree)
-        createTreeFromHeadCell(tree, fieldCells)
+        createTreeFromHeadCell(tree, fieldCells, digitalTrees)
       }
       // isIt work correct?
       // deleteEmptyTrees(digitalTrees)
@@ -220,9 +234,9 @@ export const useTrees = () => {
   function allCellToField(tree) {
     // is it correct?
     tree.cells.forEach(cell => {
-      setFieldType(cell)
+      setCellFieldType(cell)
     })
-    isCellsParentRight(tree)
+    // isCellsParentRight(tree)
   }
 
   function deleteAllCells(tree) {
@@ -235,7 +249,7 @@ export const useTrees = () => {
 
     tree.cells.forEach(cell => {
       if (cell.color === tree.bodyColor) {
-        setFieldType(cell)
+        setCellFieldType(cell)
       }
     })
     // isCellsParentRight(tree)
@@ -243,13 +257,12 @@ export const useTrees = () => {
     // isCellsParentRight(tree)
   }
 
-  function createTreeFromHeadCell(tree, fieldCells) {
+  function createTreeFromHeadCell(tree, fieldCells, digitalTrees) {
     tree.cells.forEach(cell => setCellFalling(cell))
     isCellsParentRight(tree)
     tree.counterCell = 1
     tree.cells.forEach(cell => {
       const newTree = new treeObject(
-        tree.digitalTrees,
         fieldCells,
         tree.logTextArray,
         tree.genome,
@@ -258,8 +271,9 @@ export const useTrees = () => {
       )
       addCellFromParent(cell, newTree)
       mutateGenome(newTree)
+      digitalTrees.push(newTree)
     })
-    isCellsParentRight(tree)
+    // isCellsParentRight(tree)
     tree.cells = []
   }
 

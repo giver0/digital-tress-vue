@@ -199,6 +199,7 @@ const filedBox = {
       isInstanceOfTree,
       isColorCorrect,
       isCellHaveIndexOfTree,
+      cellTypeFieldIsCorrect,
     } = useDebag()
     const {
       consoleLog,
@@ -209,7 +210,7 @@ const filedBox = {
       restartPage,
     } = useGeneral()
     const {
-      setFieldType,
+      setCellFieldType,
     } = useCell()
 
     const logTextArray = ref([])
@@ -292,7 +293,8 @@ const filedBox = {
 
     function createFirstTrees() {
       for (let treeIndex = 0; treeIndex < treeCount.value; treeIndex++) {
-        new treeObject(digitalTrees.value, fieldCells.value, logTextArray.value)
+        const newTree = new treeObject(fieldCells.value, logTextArray.value)
+        digitalTrees.value.push(newTree)
       }
     }
 
@@ -351,8 +353,9 @@ const filedBox = {
     function chooseActionAtAllTree() {
       for (const tree of digitalTrees.value) {
         console.log('tree :>> ', tree);
-        chooseAction(tree, fieldCells.value, digitalTrees.value, fieldCells.value)
+        chooseAction(tree, fieldCells.value, digitalTrees.value)
         console.log('tree :>> ', tree);
+        cellTypeFieldIsCorrect(fieldCells.value)
         debugTree(tree)
         // this.$forceUpdate()
       }
@@ -384,7 +387,7 @@ const filedBox = {
           cell => {
             if (cell?.parentTree !== null) {
               if (cell?.parentTree.energy < 0) {
-                setFieldType(cell)
+                setCellFieldType(cell)
               }
             }
           },
@@ -439,7 +442,7 @@ const filedBox = {
     function cleanField() {
       for (const raw of fieldCells.value) {
         for (const cell of raw) {
-          setFieldType(cell)
+          setCellFieldType(cell)
         }
       }
     }
@@ -477,7 +480,7 @@ const filedBox = {
         await sleep(200)
       }
       for (const cell of digitalTrees.value[digitalTrees.value.length - 1].cells) {
-        setFieldType(cell)
+        setCellFieldType(cell)
         await sleep(100)
       }
       digitalTrees.value.pop()

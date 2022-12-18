@@ -1,6 +1,13 @@
 import cellObject from '@/components/classes/cellObject'
 import treeObject from '@/components/classes/treeObject'
 
+import {
+  TYPE_FIELD,
+  BASIC_COLOR,
+  GENOME_COUNT,
+  GENOME_MAX_VALUE,
+} from '@/constant/basic'
+
 export const useDebag = () => {
   const isThrowError = true
 
@@ -109,6 +116,18 @@ export const useDebag = () => {
     }
   }
 
+  function cellTypeFieldIsCorrect(fieldCells) {
+    if (isThrowError) {
+      fieldCells.forEach(row => {
+        row.forEach(cell => {
+          if (cell.type === TYPE_FIELD && cell.parentTree !== null) {
+            throw new Error("cell type field should be correct", { trees, tree });
+          }
+        })
+      })
+    }
+  }
+
   return {
     isAnyCellAtBottom,
     isCellsParentRight,
@@ -118,6 +137,7 @@ export const useDebag = () => {
     isCellsParenNotNull,
     isCellsIndexInTreeNotNull,
     isCellHaveIndexOfTree,
+    cellTypeFieldIsCorrect,
   }
 }
 

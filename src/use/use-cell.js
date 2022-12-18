@@ -31,7 +31,7 @@ export const useCell = () => {
     cell.isCellAnimation = true
   }
 
-  function setFieldType(cell) {
+  function setCellFieldType(cell) {
     cell.isCreateAnimation = false
     cell.isCreateAnimation = true
     cell.isCellAnimation = false
@@ -90,7 +90,7 @@ export const useCell = () => {
   return {
     setCellColor,
     setCellType,
-    setFieldType,
+    setCellFieldType,
     createCellLog,
     setCellFalling,
     setCellIsNotFalling,
