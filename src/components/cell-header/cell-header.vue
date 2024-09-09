@@ -10,7 +10,18 @@
     <div class="digital-tree__header-text">
       Digital Trees
     </div>
-    <div />
+    <div class="digital-tree__header-right">
+      <a
+        href="https://github.com/ivan-hryshko/digital-trees-vue"
+        target="_blank"
+      >
+        <img
+          src="@/assets/github.svg"
+          style="height: 32px; opacity: 0.5;"
+          alt="Vue logo"
+        >
+      </a>
+    </div>
   </div>
 </template>
 

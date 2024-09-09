@@ -20,6 +20,9 @@
   align-items: center;
   margin-left: 24px;
   height: 100%;
-  
+}
+
+.digital-tree__header-right {
+  margin-right: 24px;
 }
 
