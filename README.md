@@ -12,6 +12,14 @@ npm install
 npm run serve
 ```
 
+### Or run with docker also open at http://localhost:8080/
+```
+docker build -t dital-trees .
+```
+```
+docker run -d -p 8080:80 --rm --name dital-trees-1 dital-trees
+```
+
 ### Compiles and minifies for production
 ```
 npm run build
