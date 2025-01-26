@@ -1,6 +1,8 @@
 # digital-trees-vue
 ## Deploed App
 https://digital-trees.netlify.app/
+##
+Digital Tree Evolution Simulator is an interactive and dynamic simulation where virtual trees grow, age, and evolve on a flat digital field. This project combines elements of procedural generation, cellular automata, and evolutionary algorithms to create a self-sustaining ecosystem of digital flora. Each tree has its unique, randomly generated genome that determines its growth patterns, longevity, and reproduction behavior.
 
 ## Project setup
 ```
