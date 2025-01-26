@@ -1,13 +1,13 @@
 # digital-trees-vue
-## GitHub Pages
-https://ivan-hryshko.github.io/digital-trees-vue/
+## Deploed App
+https://digital-trees.netlify.app/
 
 ## Project setup
 ```
 npm install
 ```
 
-### Compiles and hot-reloads for development
+### Compiles and hot-reloads for development open at http://localhost:8080/
 ```
 npm run serve
 ```
